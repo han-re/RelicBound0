@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relic 3</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body style="background-image: url('images/spaceship.jpg')">
+    <div id="fade-overlay"></div>
+    <header>
+        <h1>Mission: Find the 3rd Relic</h1>
+    </header>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let timeLeft = 60;
+            const timerElement = document.getElementById("timer");
+            
+            const countdown = setInterval(() => {
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    timerElement.textContent = timeLeft;
+                } else {
+                    clearInterval(countdown);
+                    window.location.href = "relic3Fail.html";
+                }
+            }, 1000);
+        });
+    </script>
+    <table>
+        <tr style="height: 150px;">
+            <td style="width: 150px;">
+                <img src="images/7 (1).png" class="img-resize"/>
+            </td>
+            <td style="width: 150px;">
+                <img src="images/9 (1).png" class="img-resize"/>
+            </tr>
+        </tr>
+        <tr style="height: 150px;">
+            <td style="width: 150px;">
+                <img src="images/8 (1).png" class="img-resize"/>
+            </td>
+            <td style="width: 150px;">
+                <img src="images/10 (1).png" class="img-resize"/>
+            </td>
+        </tr>
+    </table>
+    <style>
+        .img-resize {
+            transform: scale(1.5);
+            margin: 50px;
+        }
+    </style>
+    <p>You have just discovered an alien-made shield, which will grant you a chance to block the Enemy's critical hit once!</p>
+    <p>In order to acquire it, you must de-scramble the image. Select the correct arrangement.</p>
+    <p>Time remaining:  <span id="timer">60</span> seconds </p>
+    <table style="align-items: center;">
+        <tr>
+            <td style="width: 200px;">
+                <button style="width: 100%" type="button" onclick="location.href='relic3Fail.html'">A B<br>C D</button>
+            </td>
+            <td style="width: 200px;">
+                <button style="width: 100%" type="button" onclick="location.href='preBossFight.html'">D C<br>B A</button>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 200px;">
+                <button style="width: 100%" type="button" onclick="location.href='relic3Fail.html'">C D<br>B A</button>
+            </td>
+            <td style="width: 200px;">
+                <button style="width: 100%" type="button" onclick="location.href='relic3Fail.html'">C A<br>D B</button>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

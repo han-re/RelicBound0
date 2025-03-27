@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relic 3</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body style="background-image: url('images/spaceship.jpg')">
+    <div id="fade-overlay"></div>
+    <header>
+        <h1>Mission: Find the 3rd Relic</h1>
+     </header>
+    <img src="images/evilRobot.jpg" class="img-resize"/>
+    <style>
+        .img-resize {
+            transform: scale(1.5);
+            margin: 50px;
+        }
+    </style>
+    <p>"Initiating AI Defence System..."</p>
+    <p>You have just landed in an alien spaceship.</p>
+    <p>The 3rd relic is contained inside its rogue AI defence system.</p>
+    <p>To acquire it, you must first get past the robot...</p>
+    <button style="width: 60%;" type="button" onclick="makeChoice('path1')">Option 1: Sneak past the AI using invisibility</button>
+    <button style="width: 60%;" type="button" onclick="makeChoice('path2')">Option 2: Dismantle the AI using telekinesis</button>
+    <button style="width: 65%;" type="button" onclick="makeChoice('path3')">Option 3: Destroy the AI using super strength</button>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let chosenPower = localStorage.getItem("chosenPower");
+
+            //UNCOMMENT THIS
+            // if (!chosenPower) {
+            //     alert("Superpower selection missing. Restart the game.");
+            //     return;
+            // }
+
+            function makeChoice(path) {
+                if ((chosenPower === "invisibility" && path === "path1") ||
+                    (chosenPower === "telekenesis" && path === "path2") ||
+                    (chosenPower === "strength" && path === "path3")) {
+                    window.location.href = "relic3Success.html";
+                } else {
+                    window.location.href = "relic3Fail.html";
+                }
+            }
+            window.makeChoice = makeChoice;
+        });
+    </script>
+</body>
+</html>
