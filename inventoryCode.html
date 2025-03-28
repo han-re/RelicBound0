@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+    </head>
+    <body>
+        <!-- Add this to your html-->
+        <div id="inventory">
+            Inventory:
+            <div id="inventory-items"></div>
+        </div>
+
+        <!-- Add this to the CSS sheet-->
+        #inventory{
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+        }
+        
+        #inventory-items{
+            display: grid;
+            grid-template-columns: repeat(5,50px);
+            gap: 5px;
+            padding-left: 10px;
+        }
+
+        <!-- Add this to your JS tag if you want to add a picture into the inventory-->
+        function addToInventory(itemSrc){
+            let inventory = document.getElementById("inventory-items");
+
+            let item = document.createElement("img");
+            item.src = itemSrc;
+            item.alt = "Inventory Item";
+            item.style.width = "50px";
+            item.style.height = "50px";
+            item.style.border = "2px solid white";
+            item.style.borderRadius = "5px";
+
+            inventory.appendChild(item);
+        }
+        <!-- Make sure the image you want to add is correctly input here-->
+        addToInventory('images/relic2.png')
+
+    </body>
+</html>
