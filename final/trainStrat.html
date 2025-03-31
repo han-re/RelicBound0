@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RelicBound: Train & Strategise</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script>
+        // Function to redirect after a specified time
+        function startTimer() {
+            // Set the timer duration in milliseconds (e.g., 5000ms = 5 seconds)
+            const timerDuration = 15000;
+
+            // Redirect to the next page after the timer duration
+            setTimeout(function() {
+                window.location.href = "bossFight.html"; // Replace with your target URL
+            }, timerDuration);
+        }
+
+        // Start the timer when the page loads
+        window.onload = startTimer;
+    </script>
+</head>
+<body style="background-image: url('images/cityscape-skyscraper-night-urban-skyline-architecture-dusk-outdoors-sunset-generated-by-artificial-intelligence.jpg')">
+    <div id="fade-overlay"></div>
+    <header>
+        <h1>Mission: Defeat the Boss</h1>
+     </header>
+    <img src="images/train.png" class="img-resize"/>
+    <style>
+        .img-resize {
+            transform: scale(1.5);
+            margin: 50px;
+        }
+    </style>
+    <p>"Your selecion will lead to your victory!"</p>
+    <p>This is your chance to prepare for battle,</p>
+    <p>plan attacks and overcome your preivious weaknesses.</p>
+    <p>You will be directed to your final destination soon...</p>
+    </body>
+</html>
