@@ -29,3 +29,15 @@ CREATE TABLE itemsTable (
     itemID INT AUTO_INCREMENT PRIMARY KEY,
     userID VARCHAR(50) NOT NULL,
 );
+
+ALTER TABLE gameTable
+COLUMN gameTable(gameID) REFERENCES userTable(gameID);
+
+ALTER TABLE userTable
+COLUMN userTable(userID) REFERENCES user_inventoryTable(userInvID);
+
+ALTER TABLE user_inventoryTable
+COLUMN user_inventoryTable(inventoryID) REFERENCES inventoryTable(inventoryID);
+
+ALTER TABLE itemsTable
+COLUMN itemsTable(itemID) REFERENCES inventoryTable(itemID);
