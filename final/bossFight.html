@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RelicBound: Final Battle</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script>
+        // Function to redirect after a specified time
+        function startTimer() {
+            // Set the timer duration in milliseconds (e.g., 5000ms = 5 seconds)
+            const timerDuration = 20000;
+
+            // Redirect to the next page after the timer duration
+            setTimeout(function() {
+                window.location.href = "congratulations.html"; // Replace with your target URL
+            }, timerDuration);
+        }
+
+        // Start the timer when the page loads
+        window.onload = startTimer;
+    </script>
+</head>
+<body style="background-image: url('images/pre_boss_fight_scene.jpeg')"> 
+    <audio controls autoplay muted>
+        <source src="audio/swordFight.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+      </audio>
+    <div id="fade-overlay"></div>
+    <header>
+        <h1>The battle has commenced!</h1>
+     </header>
+    
+    <style>
+        .img-resize {
+            transform: scale(1.5);
+            margin: 50px;
+        }
+    </style>
+    </body>
+</html>
