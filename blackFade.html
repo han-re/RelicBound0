@@ -1,0 +1,28 @@
+<!-- ADD THIS TO YOUR HTML CODE, JUST ABOOVE YOUR HEADER -->
+<div id="fade-overlay"></div>
+
+<!-- ADD THIS TO YOUR CSS STYLESHEET -->
+#fade-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    z-index: 9999;
+    opacity: 1;
+    animation: fadingIn 1s ease-out forwards;
+    pointer-events: none;
+}
+
+@keyframes fadingIn {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes fadingOut {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+<!-- NOTE: Add this to every page EXCEPT for the first page of each relic/battle, where we'll add the timetravel animation instead -->
