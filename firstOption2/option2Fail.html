@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Option 2 Fail</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body style="background-image: url('images/background.jpg')">
+    <div id="fade-overlay"></div>
+    <header>
+        <h1>YOU LOSE!</h1>
+     </header>
+    <img src="images/andy.jpeg" class="img-resize"/>
+    <style>
+        .img-resize {
+            transform: scale(1.5);
+            margin: 50px;
+        }
+    </style>
+    <p>"You never stood a chance anyway..."</p>
+    <p>You entered the wrong number. Now you must restart the game.</p>
+    <button style="width: 50%;" id="returnHome" onclick="location.href='home.html'">Return to Homescreen</button>
+    <div id="inventory">
+        Inventory:
+        <div id="inventory-items"></div>
+    </div>
+    <script>
+        function addToInventory(itemSrc){
+            let inventory = document.getElementById("inventory-items");
+
+            let item = document.createElement("img");
+            item.src = itemSrc;
+            item.alt = "Inventory Item";
+            item.style.width = "50px";
+            item.style.height = "50px";
+            item.style.border = "2px solid white";
+            item.style.borderRadius = "5px";
+
+            inventory.appendChild(item);
+        }
+    </script>
+</body>
+</html>

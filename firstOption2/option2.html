@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Option 2</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script>
+        let randomNum = Math.floor(Math.random() * 100) + 1;
+        // console.log(randomNum);
+        function checkNumber() {
+            let enteredNum = document.getElementById("enteredNum").value;
+            enteredNum = parseInt(enteredNum);
+            if (enteredNum === randomNum) {
+                window.location.href = "option2Success.html";
+            }else {
+                window.location.href = "option2Fail.html";
+            }
+        }
+    </script>
+</head>
+<body style="background-image: url('images/background.jpg')">
+    <div id="fade-overlay"></div>
+    <header>
+        <h1>Final Boss Fight</h1>
+     </header>
+    <img src="images/andy.jpeg" class="img-resize"/>
+    <style>
+        .img-resize {
+            transform: scale(1.5);
+            margin: 50px;
+        }
+    </style>
+    <p>"Bold move."</p>
+    <p>You have 1/100 chance of defeating the enemy by hitting his critical spot.</p>
+    <main>
+        <form class="answer-box">
+            <label>Enter a number 1-100:
+                <input type="number" id="enteredNum" name="enteredNum" min="1" max="100"required>
+            </label>
+            <button type="button" onclick="checkNumber()">ATTACK</button>
+        </form>
+    </main>
+</body>
+</html>

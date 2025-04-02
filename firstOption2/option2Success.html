@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Option 2 Success</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body style="background-image: url('images/background.jpg')">
+    <div id="fade-overlay"></div>
+    <header>
+        <h1>YOU WIN!</h1>
+     </header>
+    <img src="images/X.png" class="img-resize"/>
+    <style>
+        .img-resize {
+            transform: scale(1.5);
+            margin: 50px;
+        }
+    </style>
+    <p>Congratulations! You entered the right number! The Final Boss is dead.</p>
+    <button style="width: 50%;" id="returnHome" onclick="location.href='home.html'">Return to Homescreen</button>
+    <div id="inventory">
+        Inventory:
+        <div id="inventory-items"></div>
+    </div>
+    <script>
+        function addToInventory(itemSrc){
+            let inventory = document.getElementById("inventory-items");
+
+            let item = document.createElement("img");
+            item.src = itemSrc;
+            item.alt = "Inventory Item";
+            item.style.width = "50px";
+            item.style.height = "50px";
+            item.style.border = "2px solid white";
+            item.style.borderRadius = "5px";
+
+            inventory.appendChild(item);
+        }
+    </script>
+</body>
+</html>
