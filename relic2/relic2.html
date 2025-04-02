@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relic 2</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body style="background-image: url('images/9ace2946-3a34-4e16-a8f5-c603c77dbfb7.jpg')">
+    <div id="fade-overlay"></div>
+    <header>
+        <h1>Mission: Find the 2nd Relic</h1>
+     </header>
+    <img src="images/Untitled design copy.png" class="img-resize"/>
+    <style>
+        .img-resize {
+            transform: scale(1.5);
+            margin: 50px;
+        }
+    </style>
+    <p>"Welcome, traveller!"</p>
+    <p>You have just entered the Lost Kingdom of McDowell,</p>
+    <p>which is powered by a relic hidden deep within its castle's walls. You must acquire it.</p>
+    <p>However, should you acquire the relic, the kingdom will come to ruin. Chose your next steps wisely...</p>
+    <button style="width: 50%;" type="button" onclick="location.href='negotiation.html'">Option 1: Negotiate with the King</button>
+    <button style="width: 60%;" type="button" onclick="location.href='stalk.html'">Option 2: Observe habits of daily city life</button>
+    
+    <button style="width: 20%;" type="button" onclick="saveProgress()">Save Game</button>
+    
+    <div id="successMessage" style="color: green; display: none;">Progress Saved Successfully!</div>
+    <div id="errorMessage" style="color: red; display: none;">Error saving progress. Please try again.</div>
+    <script>
+        document.getElementById('saveButton').addEventListener('click', function() {
+            const userProgress = document.getElementById('userProgress').value;
+
+            //Ensure progress isn't empty
+            if (userProgress.trim() === "") {
+                alert("Please enter some progress.");
+                return;
+            }
+
+            let params = new URLSearchParams();
+            params.append('hostname', 'localhost'); //Example value
+            params.append('username', 'root');      //Example value
+            params.append('password', '');          //Your database password
+            params.append('database', 'game_db');   //Your database name
+            params.append('query', `INSERT INTO user_progress (user_id, progress) VALUES (1, '${userProgress}')`); //Example query (adjust to your needs)
+            executeDatabaseQuery(params);
+        });
+
+        async function executeDatabaseQuery(params) {
+            const url = 'https://cocarroll06.webhosting1.eeecs.qub.ac.uk/dbConnector.php';
+            try {
+                // Send the data to dbConnector.php using POST
+                let response = await fetch(url, {
+                    method: 'POST',
+                    body: params
+                });
+
+                //Parse JSON response
+                let result = await response.json();
+
+                //Check if the query was successful
+                if (result.success) {
+                    document.getElementById('successMessage').style.display = 'block';
+                    document.getElementById('errorMessage').style.display = 'none';
+                } else {
+                    document.getElementById('errorMessage').style.display = 'block';
+                    document.getElementById('successMessage').style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('errorMessage').style.display = 'block';
+                document.getElementById('successMessage').style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
