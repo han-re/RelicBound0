@@ -1,0 +1,17 @@
+<!-- example button -->
+<!-- note: you no longer need the " onclick="location.href='negotiation.html'" " part of the button,
+so just enter the url into the function parameter, as shown below -->
+<button onclick="playSoundAndRedirect('negotiation.html')"style="width: 50%;" type="button" onclick="location.href='negotiation.html'">Option 1: Negotiate with the King</button>
+
+<!-- add this function the same page -->
+<script>
+        function playSoundAndRedirect(url) {
+        const clickSound = document.getElementById("clickSound");
+        clickSound.currentTime = 0; //Restart sound if already playing
+        clickSound.play();
+        //Delay redirect to allow sound to play
+        setTimeout(() => {
+            window.location.href = url;
+        }, 170);
+    }
+</script>
