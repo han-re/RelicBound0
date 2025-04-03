@@ -17,12 +17,54 @@
             <div id="inventory-items"></div>
         </div>
         <p>Your inventory is full. Choose an item to discard.</p>
-        <button style="width: 50%;" type="button" onclick="deleteItem(5);">Discard Item: The Sword Of Souls</button>
-        <button style="width: 50%;" type="button" onclick="deleteItem(6)">Discard Item: The Shield Of Saints</button>
-        <button style="width: 50%;" type="button" onclick="deleteItem(7)">Discard Item: Aztec Inscription</button>
+        <button style="width: 50%;" type="button" onclick="deleteItem(5); removeFromInventory('images/fullSword.jpg')">Discard Item: The Sword Of Souls</button>
+        <button style="width: 50%;" type="button" onclick="removeFromInventory('images/fullShield.png'); deleteItem(6);">Discard Item: The Shield Of Saints</button>
+        <button style="width: 50%;" type="button" onclick="deleteItem(7); removeFromInventory('images/inscription.jpg')">Discard Item: Aztec Inscription</button>
 
     <script>
+
+function addToInventory(itemSrc){
+            let inventory = document.getElementById("inventory-items");
+
+            let item = document.createElement("img");
+            item.src = itemSrc;
+            item.alt = "Inventory Item";
+            item.style.width = "50px";
+            item.style.height = "50px";
+            item.style.border = "2px solid white";
+            item.style.borderRadius = "5px";
+
+            inventory.appendChild(item);
+        }
+        addToInventory('images/fullSword.jpg')
+        addToInventory('images/inscription.jpg')
+        addToInventory('images/relic1img.png')
+        addToInventory('images/relic2.png')
+        addToInventory('images/relic3.jpg')
+        addToInventory('images/fullShield.png')
+
+
+        function removeFromInventory(itemSrc){
+            let inventory = document.getElementById("inventory-items");
+            let items = inventory.getElementsByTagName("img");
+
+            for(let i = 0; i < items.length; i++){
+                if(items[i].src.endsWith(itemSrc)){
+                    inventory.removeChild(items[i]);
+                    return;
+                }
+            }
+        }
+
+
+
+
+
+
+
+
         let userId = sessionStorage.getItem("userId");
+
         async function fetchuserInvId(userId){
 
 let hostname = "localhost";
@@ -86,7 +128,7 @@ let params = new URLSearchParams();
         let username = "ralex01";
         let password = "PVbhXXLBnWZY23x8";
         let database = "CSC1034_CW_47";
-        let query = `DELETE FROM inventoryTable WHERE itemId = ${itemId} AND userInvId = 1`;
+        let query = `DELETE FROM inventoryTable WHERE itemId = ${itemId} AND userInvId = ${userInvId}`;
 
         let params = new URLSearchParams();
             params.append('hostname', hostname);
