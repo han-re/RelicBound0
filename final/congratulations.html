@@ -28,5 +28,97 @@
     <p>Now, you and your freinds can live in peace with the world free from the final boss, The darkload, mcdowell.</p>
     <p>Your legacy will live past you...</p>
     <button style="width: 50%;" type="button" onclick="location.href='summary.html'">NEXT</button>
+
+    <!-- ADD FROM HERE -->
+    <div id="results"></div>
+
+<script>
+
+
+
+let userId = sessionStorage.getItem("userId");
+        let gameuserId = sessionStorage.getItem("gameuserId");
+        let gameId = sessionStorage.getItem("gameId");
+
+// let userId = 81;
+//         let gameuserId = 3;
+//         let gameId = 34;
+
+    // Function to update defeatedBoss field using game ID from session storage
+
+    async function updateDefeatedBossStatus() {
+    let hostname = 'localhost';
+    let username = 'rcareysmall01';
+    let password = 'q1YsjQG0CHDhBXQ5';
+    let database = 'CSC1034_CW_47';
+    let query = `UPDATE gameTable SET defeatedBoss=1 WHERE gameId = ${gameId}`;
+
+    let params = new URLSearchParams();
+    params.append('hostname', hostname);
+    params.append('username', username);
+    params.append('password', password);
+    params.append('database', database);
+    params.append('query', query);
+
+    let url = 'https://rcareysmall01.webhosting1.eeecs.qub.ac.uk/dbConnector.php';
+
+    try {
+        let response = await fetch(url, {
+            method: 'POST',
+            body: params
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        let rawResponse = await response.text();
+        console.log("Raw Response:", rawResponse);
+
+        let result;
+        try {
+            result = JSON.parse(rawResponse);
+        } catch (error) {
+            console.error("Error parsing JSON:", error);
+            document.getElementById('results').innerHTML = `<p style="color:yellow;">Error: ${error.message}</p>`;
+            return;
+        }
+
+        let resultsDiv = document.getElementById("results");
+        console.log("ResultsDiv:", resultsDiv); // If null, the element is missing
+
+
+if (resultsDiv) {
+    resultsDiv.innerHTML = "Boss defeat status updated successfully!";
+} else {
+    console.error("Error: 'results' element not found in DOM.");
+}
+
+
+        if (result.error) {
+            console.log(result.error.toString());
+            resultsDiv.innerHTML = `<p style="color:yellow;">${result.error}</p>`;
+        } else if (result.success) {
+            console.log("Update successful!");
+            resultsDiv.innerHTML = `<p style="color:green;">Boss defeat status updated successfully!</p>`;
+        } else {
+            console.log("Update failed!");
+            resultsDiv.innerHTML = `<p style="color:red;">Update failed.</p>`;
+        }
+    } catch (error) {
+        console.error("Error during fetch:", error);
+        document.getElementById('results').innerHTML = `<p style="color:yellow;">Error: ${error.message}</p>`;
+    }
+}
+
+window.onload = function() {
+    updateDefeatedBossStatus();
+};
+
+window.addEventListener("DOMContentLoaded", function () {
+    updateDefeatedBossStatus();
+});
+</script>
+    <!-- FINISH ADD HERE -->
 </body>
 </html>
