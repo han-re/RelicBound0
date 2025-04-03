@@ -97,17 +97,17 @@ if (resultsDiv) {
 
         if (result.error) {
             console.log(result.error.toString());
-            resultsDiv.innerHTML = `<p style="color:yellow;">${result.error}</p>`;
+            
         } else if (result.success) {
             console.log("Update successful!");
-            resultsDiv.innerHTML = `<p style="color:green;">Boss defeat status updated successfully!</p>`;
+            
         } else {
             console.log("Update failed!");
-            resultsDiv.innerHTML = `<p style="color:red;">Update failed.</p>`;
+            
         }
     } catch (error) {
         console.error("Error during fetch:", error);
-        document.getElementById('results').innerHTML = `<p style="color:yellow;">Error: ${error.message}</p>`;
+        
     }
 }
 
