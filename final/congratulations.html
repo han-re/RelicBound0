@@ -80,7 +80,7 @@ let userId = sessionStorage.getItem("userId");
             result = JSON.parse(rawResponse);
         } catch (error) {
             console.error("Error parsing JSON:", error);
-            document.getElementById('results').innerHTML = `<p style="color:yellow;">Error: ${error.message}</p>`;
+            
             return;
         }
 
