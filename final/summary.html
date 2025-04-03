@@ -230,7 +230,6 @@
 
             <h1 style="color: #FF0000;">Summary Page</h1>
             <h2 style="color: #FF0000;">This page holds the elements you have collected during this game.</h2>
-            <h2 style="color: #FF0000;">Thanks for playing</h2>
 
             <!-- <button onclick="fetchGameDetails(userId)">Click Me!</button> -->
             <table>
@@ -265,11 +264,15 @@
     </div>
     <script>
 
-        let userId = sessionStorage.getItem("userId");
-        let gameuserId = sessionStorage.getItem("gameuserId");
-        let gameId = sessionStorage.getItem("gameId");
+        // let userId = sessionStorage.getItem("userId");
+        // let gameuserId = sessionStorage.getItem("gameuserId");
+        // let gameId = sessionStorage.getItem("gameId");
 
-        document.getElementById('queryForm').addEventListener('submit', async function (event) {
+        let userId = 3;
+        let gameuserId = 2;
+        let gameId = 1;
+
+        document.getElementById('queryForm').addEventListener('submit', function (event) {
 
             event.preventDefault();
 
@@ -278,7 +281,7 @@
             let password = 'q1YsjQG0CHDhBXQ5';
             let database = 'CSC1034_CW_47';
             //let query = document.getElementById('query').value;
-            let query = 'SELECT * FROM gameTable WHERE gameId = ${gameId}  LIMIT 1';
+            let query = `SELECT * FROM gameTable WHERE gameId = ${gameId}  LIMIT 1`;
 
             // Create a URLSearchParams object to store form input values in a key-value format
             let params = new URLSearchParams();
@@ -291,237 +294,490 @@
             console.log(params.toString());
 
             executeDatabaseQuery(params);
+            fetchItems2(userId);
 
 
 
         });
 
-            async function executeDatabaseQuery(params) {
-                let url = 'https://rcareysmall01.webhosting1.eeecs.qub.ac.uk/dbConnector.php';
-                try {
-                    let response = await fetch(url, {
-                        method: 'POST',
-                        body: params
-                    }); // Waits for a response from the fetch
+        async function executeDatabaseQuery(params) {
+    let url = 'https://rcareysmall01.webhosting1.eeecs.qub.ac.uk/dbConnector.php';
+    try {
+        let response = await fetch(url, {
+            method: 'POST',
+            body: params
+        }); // Waits for a response from the fetch
 
+        let result = await response.json(); // Waits for the JSON to be parsed
 
-                    let result = await response.json(); // Waits for the JSON to be parsed
+        let resultsDiv = document.getElementById('results');
+        let timeUsedDiv = document.getElementById('timeUsed');
+        let defeatedBossDiv = document.getElementById('defeatedBoss');
+        let powerDiv = document.getElementById('power');
 
-                    let resultsDiv = document.getElementById('results');
-                    let timeUsedDiv = document.getElementById('timeUsed');
-                    let defeatedBossDiv = document.getElementById('defeatedBoss');
-                    let powerDiv = document.getElementById('power');
+        resultsDiv.innerHTML = '';
 
-
-                    resultsDiv.innerHTML = '';
-
-                    //ADD
-
-                    let dfValue='${result.data[0][headers[1]]}';
-
-                    if (dfValue>0){
-                        dfValue='YES'
-                    }else{
-                        dfValue='NO'
-                    }
-
-                    //END OF ADD
-
-                    let headers = Object.keys(result.data[0]);
-                    timeUsed.innerHTML = `<p style="color:yellow;">${result.data[0][headers[2]]}</p>`;
-
-                    //CHANGED THE NEXT LINE
-                    defeatedBoss.innerHTML = `<p style="color:yellow;">dfValue</p>`;
-                    
-                    power.innerHTML = `<p style="color:yellow;">${result.data[0][headers[4]]} </p>`;
-
-                    // If an error has been returned, e.g. incorrect SQL syntax, display the error
-
-                    // }
-
-                    if (result.error) {
-                        console.log(result.error.toString());
-                        resultsDiv.innerHTML = `<p style="color:yellow;">${result.error}</p>`;
-                    }
-                    // If a dataset has been returned, e.g. from a SELECT statement, do something.
-                    else if (result.data) {
-                        //In this case, print the dataset to a table using this method. 
-
-
-                    }
-                    else {
-                        // For anything else, assume something like INSERT, DROP etc. corresponding message
-                        resultsDiv.innerHTML = `<p>${result.success ? 'Query executed successfully' : 'No data returned'}</p>`;
-                        if (result.affected_rows !== undefined) {
-                            resultsDiv.innerHTML += `<p>Affected Rows: ${result.affected_rows}</p>`;
-
-                        }
-                    }
-                } catch (error) {
-                    console.error('Error parsing JSON:', error);
-                    document.getElementById('results').innerHTML = `<p style="color:yellow;">Error: ${error.message}</p>`;
-                }
+        if (result.error) {
+            console.log(result.error.toString());
+            resultsDiv.innerHTML = `<p style="color:yellow;">${result.error}</p>`;
+        }
+        // If a dataset has been returned, e.g. from a SELECT statement, do something.
+        else if (result.data && result.data.length > 0) {
+            //In this case, print the dataset to a table using this method. 
+            resultsDiv.innerHTML = createTableFromData(result.data);
             
-                function createTableFromData(data) {
-                    if (!data.length) {
-                        return `<p>No data available</p>`;
-                    }
-
-                    //Object.keys extracts the key (variable) names
-                    //This block prints the header row
-                    let headers = Object.keys(data[0]);
-                    let tableHTML = "<table border='1'>";
-                    tableHTML += "<tr>";
-                    for (let i = 0; i < headers.length; i++) {
-                        tableHTML += `<th>${headers[i]}</th>`;
-                    }
-                    tableHTML += "</tr>";
-
-                    //This block prints the table data. 
-                    //OUterloop interates through rows, inner loop through columns.             
-                    for (let i = 0; i < data.length; i++) {
-                        tableHTML += "<tr>";
-                        for (let j = 0; j < headers.length; j++) {
-                            tableHTML += `<td>${data[i][headers[j]]}</td>`;
-                        }
-                        tableHTML += "</tr>";
-                    }
-
-                    tableHTML += "</table>";
-                    return tableHTML;
-                }}
-
-
-
-                async function fetchItems2(){
+            // Define headers here AFTER checking data exists
+            let headers = Object.keys(result.data[0]);
             
-                        let userinvId, itemId, itemName;
+            // Now use headers
+            let dfValue = Number(result.data[0][headers[1]]);
+            dfValue = dfValue > 0 ? 'YES' : 'NO';
+            
+            timeUsedDiv.innerHTML = `<p style="color:yellow;">${result.data[0][headers[2]]}</p>`;
+            defeatedBossDiv.innerHTML = `<p style="color:yellow;">${dfValue}</p>`;
+            powerDiv.innerHTML = `<p style="color:yellow;">${result.data[0][headers[4]]} </p>`;
+        }
+        else {
+            // For anything else, assume something like INSERT, DROP etc. corresponding message
+            resultsDiv.innerHTML = `<p>${result.success ? 'Query executed successfully' : 'No data returned'}</p>`;
+            if (result.affected_rows !== undefined) {
+                resultsDiv.innerHTML += `<p>Affected Rows: ${result.affected_rows}</p>`;
+            }
+        }
+    } catch (error) {
+        console.error('Error parsing JSON:', error);
+        document.getElementById('results').innerHTML = `<p style="color:yellow;">Error: ${error.message}</p>`;
+    }
+}
+
+// Define createTableFromData outside the function
+function createTableFromData(data) {
+    if (!data.length) {
+        return `<p>No data available</p>`;
+    }
+
+    //Object.keys extracts the key (variable) names
+    //This block prints the header row
+    let headers = Object.keys(data[0]);
+    let tableHTML = "<table border='1'>";
+    tableHTML += "<tr>";
+    for (let i = 0; i < headers.length; i++) {
+        tableHTML += `<th>${headers[i]}</th>`;
+    }
+    tableHTML += "</tr>";
+
+    //This block prints the table data. 
+    //OUterloop interates through rows, inner loop through columns.             
+    for (let i = 0; i < data.length; i++) {
+        tableHTML += "<tr>";
+        for (let j = 0; j < headers.length; j++) {
+            tableHTML += `<td>${data[i][headers[j]]}</td>`;
+        }
+        tableHTML += "</tr>";
+    }
+
+    tableHTML += "</table>";
+    return '<p style=color:red;>Thanks for playing</>';
+}
+
+
+
+            //     async function fetchItems2(){
+            
+            //             let userinvId, itemId, itemName;
             
             
-            let hostname = 'localhost';
-            let username = 'rcareysmall01';
-            let password = 'q1YsjQG0CHDhBXQ5';
-            let database = 'CSC1034_CW_47';
-            let query1 = `SELECT userinvId FROM user_inventoryTable WHERE userId = ${userId}  LIMIT 1`;
-            let query2 = `SELECT itemId FROM inventoryTable WHERE userinvId = ${userinvId}  LIMIT 1`;
-            let query3 = `SELECT itemName FROM itemsTable WHERE itemId = ${itemId}`;
+            // let hostname = 'localhost';
+            // let username = 'rcareysmall01';
+            // let password = 'q1YsjQG0CHDhBXQ5';
+            // let database = 'CSC1034_CW_47';
+            // let query1 = `SELECT userinvId FROM user_inventoryTable WHERE userId = ${userId}  LIMIT 1`;
+            // let query2 = `SELECT itemId FROM inventoryTable WHERE userinvId = ${userinvId}  LIMIT 1`;
+            // let query3 = `SELECT itemName FROM itemsTable WHERE itemId = ${itemId}`;
             
-            let params1 = new URLSearchParams();
-                params1.append('hostname', hostname);
-                params1.append('username', username);
-                params1.append('password', password);
-                params1.append('database', database);
-                params1.append('query', query1);
+            // let params1 = new URLSearchParams();
+            //     params1.append('hostname', hostname);
+            //     params1.append('username', username);
+            //     params1.append('password', password);
+            //     params1.append('database', database);
+            //     params1.append('query', query1);
             
-                let url1 = 'https://rcareysmall01.webhosting1.eeecs.qub.ac.uk/dbConnector.php';
-                try {
-                    let response1 = await fetch(url1, {
-                        method: 'POST',
-                        headers: {"Content-Type":"application/x-www-form-urlencoded"},
-                        body: params1
-                    }); // Waits for a response from the fetch
+            //     let url1 = 'https://rcareysmall01.webhosting1.eeecs.qub.ac.uk/dbConnector.php';
+            //     try {
+            //         let response1 = await fetch(url1, {
+            //             method: 'POST',
+            //             headers: {"Content-Type":"application/x-www-form-urlencoded"},
+            //             body: params1
+            //         }); // Waits for a response from the fetch
             
-                    if(!response1.ok) throw new Error(`HTTP error! Status: ${response1.status}`);
-            
-            
-                    let result1 = await response1.json(); // Waits for the JSON to be parsed
-            
-                    if(result1.data && result1.data.length > 0){
-                        userinvId = result1.data[0].userinvId;
-                        console.log("Fetched userinvId ID: ", userinvId);
-                        return userinvId;
-                    }else{
-                        console.log("No userinvId found for the given user.")
-                    }
-                }catch (error){
-                    console.error("Error fetching userinvId: ", error);
-                }
-            
-                let params2 = new URLSearchParams();
-                params2.append('hostname', hostname);
-                params2.append('username', username);
-                params2.append('password', password);
-                params2.append('database', database);
-                params2.append('query', query2);
-            
-                let url2 = 'https://rcareysmall01.webhosting1.eeecs.qub.ac.uk/dbConnector.php';
-                try {
-                    let response2 = await fetch(url2, {
-                        method: 'POST',
-                        headers: {"Content-Type":"application/x-www-form-urlencoded"},
-                        body: params2
-                    }); // Waits for a response from the fetch
-            
-                    if(!response2.ok) throw new Error(`HTTP error! Status: ${response2.status}`);
+            //         if(!response1.ok) throw new Error(`HTTP error! Status: ${response1.status}`);
             
             
-                    let result2 = await response2.json(); // Waits for the JSON to be parsed
+            //         let result1 = await response1.json(); // Waits for the JSON to be parsed
             
-                    if(result2.data && result2.data.length > 0){
-                        itemId = result2.data[0].itemId;
-                        console.log("Fetched itemId ID: ", itemId);
-                        return itemId;
-                    }else{
-                        console.log("No itemId found for the given user.")
-                    }
-                }catch (error){
-                    console.error("Error fetching itemId: ", error);
-                }
+            //         if(result1.data && result1.data.length > 0){
+            //             userinvId = result1.data[0].userinvId;
+            //             console.log("Fetched userinvId ID: ", userinvId);
+            //             return userinvId;
+            //         }else{
+            //             console.log("No userinvId found for the given user.")
+            //         }
+            //     }catch (error){
+            //         console.error("Error fetching userinvId: ", error);
+            //     }
+            
+            //     let params2 = new URLSearchParams();
+            //     params2.append('hostname', hostname);
+            //     params2.append('username', username);
+            //     params2.append('password', password);
+            //     params2.append('database', database);
+            //     params2.append('query', query2);
+            
+            //     let url2 = 'https://rcareysmall01.webhosting1.eeecs.qub.ac.uk/dbConnector.php';
+            //     try {
+            //         let response2 = await fetch(url2, {
+            //             method: 'POST',
+            //             headers: {"Content-Type":"application/x-www-form-urlencoded"},
+            //             body: params2
+            //         }); // Waits for a response from the fetch
+            
+            //         if(!response2.ok) throw new Error(`HTTP error! Status: ${response2.status}`);
+            
+            
+            //         let result2 = await response2.json(); // Waits for the JSON to be parsed
+            
+            //         if(result2.data && result2.data.length > 0){
+            //             itemId = result2.data[0].itemId;
+            //             console.log("Fetched itemId ID: ", itemId);
+            //             return itemId;
+            //         }else{
+            //             console.log("No itemId found for the given user.")
+            //         }
+            //     }catch (error){
+            //         console.error("Error fetching itemId: ", error);
+            //     }
             
             
             
             
             
+            //     let params3 = new URLSearchParams();
+            //     params3.append('hostname', hostname);
+            //     params3.append('username', username);
+            //     params3.append('password', password);
+            //     params3.append('database', database);
+            //     params3.append('query', query3);
+            
+            //     let url3 = 'https://rcareysmall01.webhosting1.eeecs.qub.ac.uk/dbConnector.php';
+            //     try {
+            //         let response3 = await fetch(url3, {
+            //             method: 'POST',
+            //             headers: {"Content-Type":"application/x-www-form-urlencoded"},
+            //             body: params3
+            //         }); // Waits for a response from the fetch
+            
+            //         if(!response3.ok) throw new Error(`HTTP error! Status: ${response3.status}`);
+            
+            
+            //         let result3 = await response3.json(); // Waits for the JSON to be parsed
+            
+            //         if(result3.data && result3.data.length > 0){
+            //             itemName = result3.data[0].itemName;
+            //             console.log("Fetched itemName ID: ", itemName);
+            //             return itemName;
+            //         }else{
+            //             console.log("No itemName found for the given user.")
+            //         }
+            //     }catch (error){
+            //         console.error("Error fetching itemName: ", error);
+            //     }
+            
+            
+            //     let itemNameDiv = document.getElementById('itemName');
+                             
+                            
+            //     itemName.innerHTML = '';
+            
+            //     let headers = Object.keys(itemName[0]);
+            //     let bulletHTML;
+            //             if (!itemName.length) {
+            //                 return `<p>No data available</p>`;
+            //             }else{ bulletHTML = "<p>if";
+            //             for (let i = 0; i < headers.length; i++) {
+            //                 bulletHTML += `- ${headers[i]} \n`;
+            //             }
+            //             bulletHTML += "</p>";}
+            
+            
+            
+            // }
+
+//             async function fetchItems2() {
+//     let hostname = 'localhost';
+//     let username = 'rcareysmall01';
+//     let password = 'q1YsjQG0CHDhBXQ5';
+//     let database = 'CSC1034_CW_47';
+    
+//     try {
+//         // First query to get userinvId
+//         let query1 = `SELECT userinvId FROM user_inventoryTable WHERE userId = ${userId} LIMIT 1`;
+//         let params1 = new URLSearchParams();
+//         params1.append('hostname', hostname);
+//         params1.append('username', username);
+//         params1.append('password', password);
+//         params1.append('database', database);
+//         params1.append('query', query1);
+        
+//         let url = 'https://rcareysmall01.webhosting1.eeecs.qub.ac.uk/dbConnector.php';
+//         let response1 = await fetch(url, {
+//             method: 'POST',
+//             headers: {"Content-Type":"application/x-www-form-urlencoded"},
+//             body: params1
+//         });
+        
+//         if(!response1.ok) throw new Error(`HTTP error! Status: ${response1.status}`);
+//         let result1 = await response1.json();
+        
+//         if(!result1.data || result1.data.length === 0) {
+//             console.log("No userinvId found for the given user.");
+//             return;
+//         }
+        
+//         let userinvId = result1.data[0].userinvId;
+//         console.log("Fetched userinvId: ", userinvId);
+        
+//         // Second query to get itemId
+//         let query2 = `SELECT itemId FROM inventoryTable WHERE userinvId = ${userinvId}`;
+//         let params2 = new URLSearchParams();
+//         params2.append('hostname', hostname);
+//         params2.append('username', username);
+//         params2.append('password', password);
+//         params2.append('database', database);
+//         params2.append('query', query2);
+        
+//         let response2 = await fetch(url, {
+//             method: 'POST',
+//             headers: {"Content-Type":"application/x-www-form-urlencoded"},
+//             body: params2
+//         });
+        
+//         if(!response2.ok) throw new Error(`HTTP error! Status: ${response2.status}`);
+//         let result2 = await response2.json();
+        
+//         if(!result2.data || result2.data.length === 0) {
+//             console.log("No itemIds found for the given userinvId.");
+//             return;
+//         }
+        
+//         // Now we might have multiple items
+//         let itemIds = result2.data.map(item => item.itemId);
+//         console.log("Fetched itemIds: ", itemIds);
+        
+//         // Third query to get itemNames for all itemIds
+//         let itemNames = [];
+//         for(let itemId of itemIds) {
+//             let query3 = `SELECT itemName FROM itemsTable WHERE itemId = ${itemId}`;
+//             let params3 = new URLSearchParams();
+//             params3.append('hostname', hostname);
+//             params3.append('username', username);
+//             params3.append('password', password);
+//             params3.append('database', database);
+//             params3.append('query', query3);
+            
+//             let response3 = await fetch(url, {
+//                 method: 'POST',
+//                 headers: {"Content-Type":"application/x-www-form-urlencoded"},
+//                 body: params3
+//             });
+            
+//             if(!response3.ok) throw new Error(`HTTP error! Status: ${response3.status}`);
+//             let result3 = await response3.json();
+            
+//             if(result3.data && result3.data.length > 0) {
+//                 itemNames.push(result3.data[0].itemName);
+//             }
+//         }
+        
+//         console.log("Fetched itemNames: ", itemNames);
+        
+//         // Display the item names in the DOM
+//         let itemNameDiv = document.getElementById('itemName');
+        
+//         if(itemNames.length === 0) {
+//             itemNameDiv.innerHTML = '<p>No items found</p>';
+//             console.log("zero items");
+//         } else {
+//             let bulletHTML = '<ul>';
+//             for(let name of itemNames) {
+//                 bulletHTML += `<li>${name}</li>`;
+//             }
+//             bulletHTML += '</ul>';
+//             itemNameDiv.innerHTML = bulletHTML;
+//         }
+        
+//         console.log("Item Names:");
+// for(let name of itemNames) {
+//     console.log("- " + name);
+// }
+//         return bulletHTML;
+        
+//     } catch (error) {
+//         console.error("Error in fetchItems2: ", error);
+//         let itemNameDiv = document.getElementById('itemName');
+//         itemNameDiv.innerHTML = '<p>Error fetching items</p>';
+//     }
+// }
+
+
+async function fetchItems2(userId) { // Make sure userId is passed as a parameter
+    let hostname = 'localhost';
+    let username = 'rcareysmall01';
+    let password = 'q1YsjQG0CHDhBXQ5';
+    let database = 'CSC1034_CW_47';
+    let bulletHTML = ''; // Initialized outside of if/else blocks
+    
+    try {
+        // First query to get userinvId
+        let query1 = `SELECT userinvId FROM user_inventoryTable WHERE userId  = ${userId} LIMIT 1`;
+        let params1 = new URLSearchParams();
+        params1.append('hostname', hostname);
+        params1.append('username', username);
+        params1.append('password', password);
+        params1.append('database', database);
+        params1.append('query', query1);
+        params1.append('params', JSON.stringify([userId])); // Pass parameters separately
+        
+        let url = 'https://rcareysmall01.webhosting1.eeecs.qub.ac.uk/dbConnector.php';
+        let response1 = await fetch(url, {
+            method: 'POST',
+            headers: {"Content-Type":"application/x-www-form-urlencoded"},
+            body: params1
+        });
+        
+        if(!response1.ok) throw new Error(`HTTP error! Status: ${response1.status}`);
+        let result1 = await response1.json();
+        
+        if(!result1.data || result1.data.length === 0) {
+            console.log("No userinvId found for the given user.");
+            let itemNameDiv = document.getElementById('itemName');
+            if(itemNameDiv) { // Check if element exists
+                itemNameDiv.innerHTML = '<p>No user inventory found</p>';
+            } else {
+                console.error("Element with id 'itemName' not found");
+            }
+            return;
+        }
+        
+        let userinvId = result1.data[0].userinvId;
+        console.log("Fetched userinvId: ", userinvId);
+        
+        // Second query to get itemId
+        let query2 = `SELECT itemId FROM inventoryTable WHERE userinvId = ${userinvId}`;
+        let params2 = new URLSearchParams();
+        params2.append('hostname', hostname);
+        params2.append('username', username);
+        params2.append('password', password);
+        params2.append('database', database);
+        params2.append('query', query2);
+        params2.append('params', JSON.stringify([userinvId]));
+        
+        let response2 = await fetch(url, {
+            method: 'POST',
+            headers: {"Content-Type":"application/x-www-form-urlencoded"},
+            body: params2
+        });
+        
+        if(!response2.ok) throw new Error(`HTTP error! Status: ${response2.status}`);
+        let result2 = await response2.json();
+        
+        if(!result2.data || result2.data.length === 0) {
+            console.log("No itemIds found for the given userinvId.");
+            let itemNameDiv = document.getElementById('itemName');
+            if(itemNameDiv) {
+                itemNameDiv.innerHTML = '<p>No items found in inventory</p>';
+            } else {
+                console.error("Element with id 'itemName' not found");
+            }
+            return;
+        }
+        
+        // Now we might have multiple items
+        let itemIds = result2.data.map(item => item.itemId);
+        console.log("Fetched itemIds: ", itemIds);
+        
+        // Third query to get itemNames for all itemIds
+        let itemNames = [];
+        for(let itemId of itemIds) {
+            try {
+                let query3 = `SELECT itemName FROM itemsTable WHERE itemId = ${itemId}`;
                 let params3 = new URLSearchParams();
                 params3.append('hostname', hostname);
                 params3.append('username', username);
                 params3.append('password', password);
                 params3.append('database', database);
                 params3.append('query', query3);
-            
-                let url3 = 'https://rcareysmall01.webhosting1.eeecs.qub.ac.uk/dbConnector.php';
-                try {
-                    let response3 = await fetch(url3, {
-                        method: 'POST',
-                        headers: {"Content-Type":"application/x-www-form-urlencoded"},
-                        body: params3
-                    }); // Waits for a response from the fetch
-            
-                    if(!response3.ok) throw new Error(`HTTP error! Status: ${response3.status}`);
-            
-            
-                    let result3 = await response3.json(); // Waits for the JSON to be parsed
-            
-                    if(result3.data && result3.data.length > 0){
-                        itemName = result3.data[0].itemName;
-                        console.log("Fetched itemName ID: ", itemName);
-                        return itemName;
-                    }else{
-                        console.log("No itemName found for the given user.")
-                    }
-                }catch (error){
-                    console.error("Error fetching itemName: ", error);
+                params3.append('params', JSON.stringify([itemId]));
+                
+                let response3 = await fetch(url, {
+                    method: 'POST',
+                    headers: {"Content-Type":"application/x-www-form-urlencoded"},
+                    body: params3
+                });
+                
+                if(!response3.ok) throw new Error(`HTTP error! Status: ${response3.status}`);
+                let result3 = await response3.json();
+                
+                if(result3.data && result3.data.length > 0) {
+                    itemNames.push(result3.data[0].itemName);
                 }
-            
-            
-                let itemNameDiv = document.getElementById('itemName');
-                             
-                            
-                itemName.innerHTML = '';
-            
-                let headers = Object.keys(itemName[0]);
-                let bulletHTML;
-                        if (!itemName.length) {
-                            return `<p>No data available</p>`;
-                        }else{ bulletHTML = "<p>if";
-                        for (let i = 0; i < headers.length; i++) {
-                            bulletHTML += `- ${headers[i]} \n`;
-                        }
-                        bulletHTML += "</p>";}
-            
-            
-            
+            } catch (error) {
+                console.error(`Error fetching item name for itemId ${itemId}:`, error);
             }
+        }
+        
+        console.log("Fetched itemNames: ", itemNames);
+        
+        // Display the item names in the DOM
+        let itemNameDiv = document.getElementById('itemName');
+        
+        if(!itemNameDiv) {
+            console.error("Element with id 'itemName' not found");
+            return;
+        }
+        
+        if(itemNames.length === 0) {
+            itemNameDiv.innerHTML = '<p>No items found</p>';
+        } else {
+            bulletHTML = '<ul>';
+            for(let name of itemNames) {
+                bulletHTML += `<li>${name}</li>`;
+            }
+            bulletHTML += '</ul>';
+            itemNameDiv.innerHTML = bulletHTML;
+        }
+        
+        console.log("Item Names:");
+        for(let name of itemNames) {
+            console.log("- " + name);
+        }
+        
+        return itemNames; // Return the actual item names instead
+        
+    } catch (error) {
+        console.error("Error in fetchItems2: ", error);
+        let itemNameDiv = document.getElementById('itemName');
+        if(itemNameDiv) {
+            itemNameDiv.innerHTML = '<p>Error fetching items</p>';
+        } else {
+            console.error("Element with id 'itemName' not found");
+        }
+        return [];
+    }
+}
+
+
+
+
     </script>
 </body>
 
