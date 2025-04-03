@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Powers Selection</title>
+    <link rel="stylesheet" href="style1.css">
+</head>
+<body>
+    <div id="fade-overlay"></div>
+
+   <header class="startingText">
+    <h1>Choose Your Power</h1>
+    <h3 id="warning">Your choice will affect your journey. Choose wisely.</h3>
+    <br><br>
+   </header>
+
+    <section class="powerSection">
+        <div class="powerOption" onclick="selectPower('Invisibility')">
+            <img src="project_images/invisibility.jpeg" alt="Power of Invisibility - Become invisible at will">
+            <div class="powerName">INVISIBILITY</div>
+            <div class="description">Become completely invisible at will. Allowing for stealth, evasion, and surprise attacks. Players can move undetected, bypass obstacles, and avoid danger.</div>
+        </div>
+
+        <div class="powerOption" onclick="selectPower('Telekinesis')">
+            <img src="project_images/telekinesis.jpeg" alt="Power of Telekinesis - Read minds and move objects">
+            <div class="powerName">TELEKINESIS</div>
+            <div class="description">Read minds and move objects using only your thoughts. Grants players control over objects with their mind and the ability to read or influence thoughts.</div>
+        </div>
+
+        <div class="powerOption" onclick="selectPower('Superstrength')">
+            <img src="project_images/superstrength.jpeg" alt="Power of Superstrength - Lift and break objects">
+            <div class="powerName">SUPERSTRENGTH</div>
+            <div class="description">Supernatural strength. Allows players to lift heavy objects, break barriers, and overpower opponents with ease.</div>
+        </div>
+    </section>
+
+    <script>
+        function selectPower(power) {
+            localStorage.setItem('chosenPower', power);
+            window.location.href = 'context2.html';
+        }
+    </script>
+
+
+
+</body>
+</html>

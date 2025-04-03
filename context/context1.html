@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <link rel="stylesheet" href="style0.css">
+</head>
+<body>
+    <div id="fade-overlay"></div>
+
+    <header class="title">
+        <h1>RelicBound</h1>
+    </header>
+    
+    <main>
+        <section class="text">
+            <h2>Welcome to RelicBound!</h2>
+            <div class="textBox" id="welcome"></div>
+            
+            <br>
+            <h2>Game Rules & World</h2>
+            <div class="textBox" id="rules"></div>
+
+            <br>
+            <h2>Powers</h2>
+            <div class="textBox" id="powers"></div>
+        </section>
+        
+        <div class="start">
+            <button class="startBtn" onclick="window.location.href='powers.html'">Start Adventure !</button>
+        </div>
+    </main>
+    
+
+    
+    <script>
+        // Improved text content that matches the sections
+        const introText = "The fate of the universe rests in your hands. You have been tasked to destroy the evil overlord known as Blooblah. Every decision you make shapes the world and determines your destiny.";
+        
+        const rulesText = "As mentioned above, your choices shape the world. Each scenario presents multiple choices. You will have to choose between these options.\n\nChoose WRONG and you will face consequences.\n\nExplore, battle, and uncover the mysteries of time.";
+        
+        const powersText = "Before your journey begins, you will unlock extraordinary abilities. These powers will shape your path, alter fate, and influence critical decisions. Choose wisely, as each ability carries strengths and weaknesses that will define your destiny.";
+        
+        // Improved typewriter function with error handling
+        function typeWriter(elementId, text, speed) {
+            let i = 0;
+            const element = document.getElementById(elementId);
+            
+            if (!element) {
+                console.error(`Element with ID ${elementId} not found`);
+                return;
+            }
+            
+            element.innerHTML = ''; // Clear any existing content
+            
+            function typing() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(typing, speed);
+                }
+            }
+            
+            typing();
+        }
+        
+        // Initialize the page when it loads
+        window.onload = function() {
+            // Start typing animations with appropriate delays
+            typeWriter("welcome", introText, 20);
+            setTimeout(() => typeWriter("rules", rulesText,20), introText.length * 20 + 500);
+            setTimeout(() => typeWriter("powers", powersText, 20), (introText.length + rulesText.length) * 20 + 1000);
+            
+            // Add event listeners for choice buttons
+            document.querySelectorAll('.choiceBtn').forEach(button => {
+                button.addEventListener('click', function() {
+                    alert('You chose: ' + this.textContent);
+                    // Here you would add the game logic for handling choices
+                });
+            });
+        };
+    </script>
+</body>
+</html>
+
