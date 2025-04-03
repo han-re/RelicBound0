@@ -88,7 +88,10 @@
         </style>
     </head>
     <body>
-
+        <audio id="backgroundMusic" loop>
+            <source src="fantasy.mp3" type="audio/mpeg">
+            
+        </audio> 
         
 
         <!--SETTINGS FORM HTML-->
@@ -115,10 +118,6 @@
             <span>Resume Game</span>
         </div>
 
-        <div class="settingsOption" id="logoutBtn">
-            <span>Logout<span>  
-        </div>
-
         <div class="settingsOption" id="backToMainMenu">
             <span>Back To Main Menu<span>  
         </div>
@@ -127,11 +126,12 @@
     </div>
 
     <script>
+        
         //this var will be use to store the default screens id before the settings screen pops up 
         //you willl have to change mainMenu according to what the id of the main block
         const mainMenu = document.getElementById('mainMenu');
         const settingsScreen = document.getElementById('settingsScreen');
-
+        const backgroundMusic = document.getElementById('backgroundMusic');
         const settingsBtn = document.getElementById('settingsBtn');
 
         // to show settings
@@ -149,22 +149,48 @@
 
 
         //settings page functionality
-        const logoutBtn = document.getElementById('logoutBtn');
+        
         const resumeBtn = document.getElementById('resumeBtn');
         const backtoMainMenu = document.getElementById('backToMainMenu');
         
-        //logs you out
-        function tologInPage() {
-            localStorage.removeItem('gameCurrentUser');
-            window.location.href = 'LoginPage.html';
-        }
+       
         function toMainMenu(){
             window.location.href = 'StartPageTest.html';
         }
 
-        logoutBtn.addEventListener('click', tologInPage);
+    
         resumeBtn.addEventListener('click', resumeGame);
         backtoMainMenu.addEventListener('click',toMainMenu);
+
+        window.addEventListener('load', function() {
+        backgroundMusic.play().catch(error => {
+        console.log('Auto-play was prevented. User interaction needed to start audio.');
+        // Many browsers require user interaction before playing audio
+            });
+        });
+
+// Music toggle functionality
+        const musicToggle = document.getElementById('musicToggle');
+        musicToggle.checked = true; // Set checked by default
+
+        musicToggle.addEventListener('change', function() {
+        if (this.checked) {
+        backgroundMusic.play();
+         } 
+
+        else {
+        backgroundMusic.pause();
+        }
+    });
+
+// Additional function to ensure music can start after user interaction
+        document.addEventListener('click', function() {
+        if (musicToggle.checked && backgroundMusic.paused) {
+        backgroundMusic.play();
+        }
+        }, {once: true});
+
+        
 
     </script>
     </body>
