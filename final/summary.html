@@ -315,9 +315,24 @@
 
                     resultsDiv.innerHTML = '';
 
+                    //ADD
+
+                    let dfValue='${result.data[0][headers[1]]}';
+
+                    if (dfValue>0){
+                        dfValue='YES'
+                    }else{
+                        dfValue='NO'
+                    }
+
+                    //END OF ADD
+
                     let headers = Object.keys(result.data[0]);
                     timeUsed.innerHTML = `<p style="color:yellow;">${result.data[0][headers[2]]}</p>`;
-                    defeatedBoss.innerHTML = `<p style="color:yellow;">${result.data[0][headers[1]]}</p>`;
+
+                    //CHANGED THE NEXT LINE
+                    defeatedBoss.innerHTML = `<p style="color:yellow;">dfValue</p>`;
+                    
                     power.innerHTML = `<p style="color:yellow;">${result.data[0][headers[4]]} </p>`;
 
                     // If an error has been returned, e.g. incorrect SQL syntax, display the error
