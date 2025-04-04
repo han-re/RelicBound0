@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relic 4</title>
+    <link rel="stylesheet" href="css/relic4.css">
+</head>
+<body style="background-image: url('images/background.jpg')">
+    <div id="gifOverlay">
+        <img src="images/black-hole-11202.gif" alt="Loading Animation">
+    </div>
+    <audio id="clickSound">
+        <source src="audio/tapRB.MP3" type="audio/mpeg">
+    </audio>
+    <header class="title">
+        <h1>Relic 4</h1>
+    </header>
+
+    <main class="main">
+        <section class="imageSide">
+            <div class="oldBattlefield">
+                <img src="images/oldbattlefield.jpeg" alt="Transported to an Old Battlefield">
+            </div>
+        </section>
+
+        <section class="textSide">
+            <div class="textBox">
+                <p style="background-image: url('images/bgbtn.png')">The air crackles with residual energy as you materialize on the battlefield. <br><br>Ruined war machines litter the landscape, and the earth is scorched with the remnants of a war long past. <br><br>In the distance, towering ruins and broken banners flutter in the wind.</p>
+                <p style="background-image: url('images/bgbtn.png')">This is the site of The Great War, where the mightiest of heroes clashed against an invading alien force.<br><br> Many fell here, but one remained. Cursed by battle, bound by duty—he stands as the final guardian of the Omega Sigil.</p>
+                <button class="choice1" onclick="playSoundAndRedirect('greatwar.html')">Learn more about the Great War</button>
+                <button class="choice2" onclick="playSoundAndRedirect('obtainr4.html')">Acquire the Relic immediately</button>
+            </div>
+        </section>
+    </main>
+    <script>
+        function playSoundAndRedirect(url) {
+            const clickSound = document.getElementById("clickSound");
+            clickSound.currentTime = 0; //Restart sound if already playing
+            clickSound.play();
+            //Delay redirect to allow sound to play
+            setTimeout(() => {
+                window.location.href = url;
+            }, 170);
+        }
+    </script>
+</body>
+</html>

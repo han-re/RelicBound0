@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SuperStrength Failure</title>
+    <link rel="stylesheet" href="css/persuasion.css">
+
+</head>
+<body style="background-image: url('images/background.jpg')">
+    <div id="fade-overlay"></div>
+    <audio id="clickSound">
+        <source src="audio/tapRB.MP3" type="audio/mpeg">
+    </audio>
+    <div class="box" style="background-image: url('images/bgbtn.png')">
+        <div class="text">
+            You charge forward, muscles surging with power. Your first blow crashes against the warrior's blade, sending a shockwave through the battlefield. But as you press forward, his movements grow faster, stronger.]
+            <br><br>
+            GUARDIAN:
+            "Strength alone does not conquer."
+            <br><br>
+            [With an expert counter, he evades your next strike and delivers a punishing blow to your chest, sending you sprawling. You lose a life.]
+            <br><br>
+            [With the relic in your possession, the battlefield begins to fade. Time bends once more, pulling you toward your final challenge.]
+        </div>
+        <button class="button" onclick="playSoundAndRedirect('relic4.html')">Try Again</button>
+    </div>
+    <script>
+        function playSoundAndRedirect(url) {
+            const clickSound = document.getElementById("clickSound");
+            clickSound.currentTime = 0; //Restart sound if already playing
+            clickSound.play();
+            //Delay redirect to allow sound to play
+            setTimeout(() => {
+                window.location.href = url;
+            }, 170);
+        }
+    </script>
+</body>
+</html>

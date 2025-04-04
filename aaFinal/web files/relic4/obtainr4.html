@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relic 4 - Guardian Fight</title>
+    <link rel="stylesheet" href="css/3relic4.css">
+</head>
+<body style="background-image: url('images/background.jpg')">
+    <div id="fade-overlay"></div>
+    <audio id="clickSound">
+        <source src="audio/tapRB.MP3" type="audio/mpeg">
+    </audio>
+    <main class="main">
+        <section class="imageSection">
+            <img src="images/guardian.jpeg" alt="Guardian Warrior" style="width: 100%; max-height: 400px; object-fit: cover;">
+        </section>
+
+        
+        <section class="choiceSection">
+
+            <div class="choiceOption" onclick="checkPower('Persuasion')">
+                <img src="images/persuasion.jpeg" alt="Power of Persuasion - Ability to make anyone do anything">
+                <div class="powerName">PERSUASION</div>
+                <div class="description">You take a step forward, hands raised in peace.</div>
+            </div>
+
+            <div class="choiceOption" onclick="checkPower('Invisibility')">
+                <img src="images/invisibility.jpeg" alt="Power of Invisibility - Become invisible at will">
+                <div class="powerName">INVISIBILITY</div>
+                <div class="description">You vanish into thin air, moving silently through the ruins.</div>
+            </div>
+
+            <div class="choiceOption" onclick="checkPower('Telekinesis')">
+                <img src="images/telekinesis.jpeg" alt="Power of Telekinesis - Read minds and move objects">
+                <div class="powerName">TELEKINESIS</div>
+                <div class="description">You focus your mind, reaching out to the warrior's blade with invisible force.</div>
+            </div>
+
+            <div class="choiceOption" onclick="checkPower('Super Strength')">
+                <img src="images/superstrength.jpeg" alt="Power of Super Strength - Strength">
+                <div class="powerName">SUPERSTRENGTH</div>
+                <div class="description">You grip your fists, feeling the power course through you. (pause)</div>
+            </div>
+
+            <!--<button class="actionBtn" onclick="checkPower('persuade')">Try to Persuade the Guardian</button>
+            <button class="actionBtn" onclick="checkPower('mindcontrol')">Use Mind Control</button>
+            <button class="actionBtn" onclick="checkPower('stealth')">Attempt Stealth Theft</button>
+            <button class="actionBtn" onclick="checkPower('combat')">Engage in Combat</button> -->
+        </section>
+    </main>
+
+    <script>
+        function checkPower(choice) {
+            const userPower = localStorage.getItem('chosenPower');
+            console.log("Power clicked:", choice);
+            console.log("User's stored power:", userPower);
+            
+            switch(choice) {
+                case 'Persuasion':
+                    window.location.href = 'r4_f_pers.html';
+                    break;
+                case 'Telekinesis':
+                    if(userPower === 'Telekinesis') {
+                        window.location.href = 'r4_s_tele.html';
+                    } else {
+                        window.location.href = 'r4_f_tele.html';
+                    }
+                    break;
+                case 'Invisibility':
+                    if(userPower === 'Invisibility') {
+                        window.location.href = 'r4_s_invis.html';
+                    } else {
+                        window.location.href = 'r4_f_invis.html';
+                    }
+                    break;
+                case 'Super Strength':
+                    if(userPower === 'Super Strength') {
+                        window.location.href = 'r4_s_ss.html';
+                    } else {
+                        window.location.href = 'r4_f_ss.html';
+                    }
+                    break;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relic 1</title>
+    <link rel="stylesheet" href="css/success.css">
+</head>
+<body style="background-image: url('images/background.jpg')">
+    <div id="fade-overlay"></div>
+    <audio id="clickSound">
+        <source src="audio/tapRB.MP3" type="audio/mpeg">
+    </audio>
+    <header class="title">
+        <h1>RelicBound</h1>
+    </header>
+
+    <main class="main">
+        <section class="imageSide">
+            <div class="omegaSigil">
+                <img src="images/r4tele.jpeg" alt="Success Page">
+            </div>
+        </section>
+
+        <section class="textSide">
+            <div class="textBox">
+                <p style="background-image: url('images/bgbtn.png')">You focus your mind, reaching out to the warrior's blade with your mind force. You recognize his weakness—his curse is tied to the weapon itself. With great effort, you pull it from his grasp.</p>
+                <br>
+                <p style="background-image: url('images/bgbtn.png')">GUARDIAN:  "What... is this trickery?"</p>
+                <br><p style="background-image: url('images/bgbtn.png')">He stumbles back, his power waning. With his grip on the relic weakened, you seize the Omega Sigil. <br><br>A surge of energy engulfs you as the warrior vanishes, his purpose finally fulfilled.</p>
+                <br>
+                <button class="choice1" onclick="playSoundAndRedirect('finalOption.html')">Return to future</button>
+
+            </div>
+        </section>
+    </main>
+    <script>
+        function playSoundAndRedirect(url) {
+            const clickSound = document.getElementById("clickSound");
+            clickSound.currentTime = 0; //Restart sound if already playing
+            clickSound.play();
+            //Delay redirect to allow sound to play
+            setTimeout(() => {
+                window.location.href = url;
+            }, 170);
+        }
+    </script>
+</body>
+</html>

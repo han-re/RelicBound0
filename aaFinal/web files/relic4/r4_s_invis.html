@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relic 1</title>
+    <link rel="stylesheet" href="css/success.css">
+</head>
+<body style="background-image: url('images/background.jpg')">
+    <div id="fade-overlay"></div>
+    <audio id="clickSound">
+        <source src="audio/tapRB.MP3" type="audio/mpeg">
+    </audio>
+    <header class="title">
+        <h1>RelicBound</h1>
+    </header>
+
+    <main class="main">
+        <section class="imageSide">
+            <div class="omegaSigil">
+                <img src="images/r4invis.jpeg" alt="Success Page">
+            </div>
+        </section>
+
+        <section class="textSide">
+            <div class="textBox">
+                <p style="background-image: url('images/bgbtn.png')">You vanish into thin air, moving silently through the ruins. The warrior stands vigilant, unmoving, unaware of your presence. Step by step, you close the distance.</p>
+                <br>
+                <p style="background-image: url('images/bgbtn.png')">GUARDIAN:  "Where brodie go?"</p>
+                <br>
+                <p style="background-image: url('images/bgbtn.png')">Reaching the altar, you carefully pry the relic free. The moment it leaves its resting place, a gust of wind sweeps through the battlefield, and the warrior lets out a deep sigh before turning to dust.</p>
+                <br>
+                <button class="choice1" onclick="playSoundAndRedirect('finalOption.html')">Return to future</button>
+
+            </div>
+        </section>
+    </main>
+    <script>
+        function playSoundAndRedirect(url) {
+            const clickSound = document.getElementById("clickSound");
+            clickSound.currentTime = 0; //Restart sound if already playing
+            clickSound.play();
+            //Delay redirect to allow sound to play
+            setTimeout(() => {
+                window.location.href = url;
+            }, 170);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invisibility Failure</title>
+    <link rel="stylesheet" href="css/persuasion.css">
+
+</head>
+<body style="background-image: url('images/background.jpg')">
+    <div id="fade-overlay"></div>
+    <audio id="clickSound">
+        <source src="audio/tapRB.MP3" type="audio/mpeg">
+    </audio>
+    <div class="box" style="background-image: url('images/bgbtn.png')">
+        <div class="text">
+            You step forward, unseen, but as you near the relic, the warrior suddenly turns toward you. His hollow eyes glow faintly.
+            <br><br>
+            GUARDIAN: "The unseen are not unchallenged."
+            <br><br>
+            With one precise strike, his blade slices through the air, forcing you to dodge at the last second. The sudden movement disrupts your concentration, and you become visible again. Before you can react, the warrior knocks you aside. You lose a life.
+        </div>
+        <button class="button" onclick="playSoundAndRedirect('relic4.html')">Try Again</button>
+    </div>
+    <script>
+        function playSoundAndRedirect(url) {
+            const clickSound = document.getElementById("clickSound");
+            clickSound.currentTime = 0; //Restart sound if already playing
+            clickSound.play();
+            //Delay redirect to allow sound to play
+            setTimeout(() => {
+                window.location.href = url;
+            }, 170);
+        }
+    </script>
+</body>
+</html>
