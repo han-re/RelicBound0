@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relic 3</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body style="background-image: url('images/spaceship.jpg')">
+    <div id="fade-overlay"></div>
+    <audio id="clickSound">
+        <source src="audio/tapRB.MP3" type="audio/mpeg">
+    </audio>
+    <header>
+        <h1>Mission: Passed</h1>
+     </header>
+    <img src="images/deadRobot.jpeg" class="img-resize"/>
+    <style>
+        .img-resize {
+            transform: scale(1.5);
+            margin: 50px;
+        }
+    </style>
+    <p>Well done! You obtained the 3rd relic.</p>
+    <p>You are one step closer to saving your friends, but first, you have a choice to make.</p>
+    <p>The spaceship is going to into self-destruct mode. You must leave though the aliens' secret vault.</p>
+    <button style="width: 45%;" type="button" onclick="playSoundAndRedirect('relic3Filler.html')">Search alien vault</button>
+    <div id="inventory">
+        Inventory:
+        <div id="inventory-items"></div>
+    </div>
+    <script>
+        function addToInventory(itemSrc){
+            let inventory = document.getElementById("inventory-items");
+
+            let item = document.createElement("img");
+            item.src = itemSrc;
+            item.alt = "Inventory Item";
+            item.style.width = "50px";
+            item.style.height = "50px";
+            item.style.border = "2px solid white";
+            item.style.borderRadius = "5px";
+
+            inventory.appendChild(item);
+        }
+        addToInventory('images/inscription.jpg')
+        addToInventory('images/fullSword.jpg')
+        addToInventory('images/relic1img.png')
+        addToInventory('images/relic2.png')
+        addToInventory('images/relic3.jpg')
+
+        //This gets the userId from the local storage
+        let userId = localStorage.getItem("userId");
+
+        //This is to obtain the userInvId and store it in the userInvId variable below.
+        async function fetchuserInvId(userId){
+
+        let hostname = "localhost";
+        let username = "ralex01";
+        let password = "PVbhXXLBnWZY23x8";
+            let database = "CSC1034_CW_47";
+            let query = `SELECT userInvId FROM user_inventoryTable WHERE userId = ${userId}  LIMIT 1`;
+            let params = new URLSearchParams();
+                params.append('hostname', hostname);
+                params.append('username', username);
+                params.append('password', password);
+                params.append('database', database);
+                params.append('query', query);
+
+                let url = 'https://ralex01.webhosting1.eeecs.qub.ac.uk/dbConnector.php';
+                try {
+                    let response = await fetch(url, {
+                        method: 'POST',
+                        headers: {"Content-Type":"application/x-www-form-urlencoded"},
+                        body: params
+                    }); // Waits for a response from the fetch
+
+                    if(!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+
+                    let result = await response.json(); // Waits for the JSON to be parsed
+
+                    if(result.data && result.data.length > 0){
+                        userInvId = result.data[0].userInvId;
+                        console.log("Fetched userInvId ID: ", userInvId);
+                        return userInvId;
+                    }else{
+                        console.log("No userInvId found for the given user.")
+                    }
+                }catch (error){
+                    console.error("Error fetching userInvId: ", error);
+                }
+        }
+        async function insertIntoInventory(userId, itemId) {
+            let userInvId = await fetchuserInvId(userId);
+            if(!userInvId){
+                console.error("Cannot insert item.");
+                return;
+            }
+            
+            console.log("new ID", userInvId)  
+            //userInvId is correctly stored in userInvId
+            
+            //This part executes the INSERT query. It will insert the item into the database
+            let hostname = "localhost";
+            let username = "ralex01";
+            let password = "PVbhXXLBnWZY23x8";
+            let database = "CSC1034_CW_47";
+            let query = `INSERT INTO inventoryTable (itemId, userInvId) VALUES ( 2, ${userInvId})`;
+
+            let params = new URLSearchParams();
+                params.append('hostname', hostname);
+                params.append('username', username);
+                params.append('password', password);
+                params.append('database', database);
+                params.append('query', query);
+
+                console.log(params.toString());
+
+                executeDatabaseQuery(params);
+            
+            async function executeDatabaseQuery(params) {
+                let url = 'https://ralex01.webhosting1.eeecs.qub.ac.uk/dbConnector.php';
+                try {
+                    let response = await fetch(url, {
+                        method: 'POST',
+                        headers: {"Content-Type":"application/x-www-form-urlencoded"},
+                        body: params
+                    }); //Waits for a response from the fetch
+
+                    if(!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+
+                    let result = await response.json(); //Waits for the JSON to be parsed
+
+                    //If an error has been returned, e.g. incorrect SQL syntax, display the error
+                    if (result.error) {
+                        console.log(result.error.toString());
+                    }
+                    //If a dataset has been returned, e.g. from a SELECT statement, do something.
+                    else{
+                        console.log("Successful");
+                        if(result.affected_rows !== undefined){
+                            console.log(`Affected Rows: ${result.affected_rows}`);
+                        }
+                    }
+                
+                    
+                } catch (error) {
+                    console.error('Error parsing JSON:', error);
+                }
+            }
+        }
+        //Invoking function
+        insertIntoInventory(userId,3);//Make sure the itemId is the correct one corresponding to the ItemId table in the database
+
+        function playSoundAndRedirect(url) {
+            const clickSound = document.getElementById("clickSound");
+            clickSound.currentTime = 0; //Restart sound if already playing
+            clickSound.play();
+            //Delay redirect to allow sound to play
+            setTimeout(() => {
+                window.location.href = url;
+            }, 170);
+        }
+    </script>
+    </body>
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relic 3</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body style="background-image: url('images/spaceship.jpg')">
+    <div id="gifOverlay">
+        <img src="images/black-hole-11202.gif" alt="Loading Animation">
+    </div>
+    <audio id="clickSound">
+        <source src="audio/tapRB.MP3" type="audio/mpeg">
+    </audio>
+    <header>
+        <h1>Mission: Find the 3rd Relic</h1>
+     </header>
+    <img src="images/evilRobot.jpg" class="img-resize"/>
+    <style>
+        .img-resize {
+            transform: scale(1.5);
+            margin: 50px;
+        }
+    </style>
+    <p>"Initiating AI Defence System..."</p>
+    <p>You have just landed in an alien spaceship.</p>
+    <p>The 3rd relic is contained inside its rogue AI defence system.</p>
+    <p>To acquire it, you must first get past the robot by picking the correct method based on your power. Choose carefully...</p>
+    <button style="width: 60%;" type="button" onclick="makeChoice('path1')" onclick="playSoundAndRedirect()">Option 1: Sneak past the AI using invisibility</button>
+    <button style="width: 60%;" type="button" onclick="makeChoice('path2')" onclick="playSoundAndRedirect()">Option 2: Dismantle the AI using telekinesis</button>
+    <button style="width: 65%;" type="button" onclick="makeChoice('path3')" onclick="playSoundAndRedirect()">Option 3: Destroy the AI using super strength</button>
+    <script>
+        let chosenPower = null;
+            let userId = localStorage.getItem("userId") || null;
+             if(!userId){
+                console.error("User ID not found in localStorage.");
+            }
+            async function setChosenPower(userId) {
+                chosenPower = await fetchLatestPower(userId);
+                console.log("Chosen power set to: ", chosenPower);
+                
+            }
+            async function makeChoice(path) {
+                if(!chosenPower){
+                    console.log("Fetching chosen power...");
+                    await setChosenPower(userId);
+                }
+                console.log("Current power:", chosenPower);
+                if(!chosenPower){
+                    alert("Error: Power not found")
+                    return;
+                }
+                if ((chosenPower === "Invisibility" && path === "path1") ||
+                    (chosenPower === "Telekinesis" && path === "path2") ||
+                    (chosenPower === "Strength" && path === "path3")) {
+                    window.location.href = "relic3Success.html";
+                } else {
+                    window.location.href = "relic3Fail.html";
+                }
+            }
+            document.addEventListener("DOMContentLoaded", async () => {
+                let userId = localStorage.getItem("userId");
+                if(userId){
+                    await setChosenPower(userId);
+                }else{
+                    console.error("No userId found in local storage");
+                }
+            });
+            window.makeChoice = makeChoice;
+    
+        async function fetchgameUserId(userId){
+            let hostname = "localhost";
+            let username = "cocarroll06";
+            let password = "ymg9g0sCgqxDf58f";
+            let database = "CSC1034_CW_47";
+            let query = `SELECT gameuserID FROM game_userTable WHERE userId = ${userId};`
+
+            let params = new URLSearchParams();
+                params.append('hostname', hostname);
+                params.append('username', username);
+                params.append('password', password);
+                params.append('database', database);
+                params.append('query', query);
+
+            let url = 'https://cocarroll06.webhosting1.eeecs.qub.ac.uk/dbConnector.php';
+            try {
+                let response = await fetch(url, {
+                    method: 'POST',
+                    headers: {"Content-Type":"application/x-www-form-urlencoded"},
+                    body: params
+                }); //Waits for a response from the fetch
+
+                if(!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                let result = await response.json(); //Waits for the JSON to be parsed
+
+                if(result.data && result.data.length > 0){
+                    let gameuserID = result.data[0].gameuserID;
+                    console.log("Fetched gameuserId: ", gameuserID);
+                    return gameuserID;
+                }else{
+                    console.log("No gameUserID found for the given user.");
+                    return null;
+                }
+            }catch (error){
+                console.error("Error fetching gameUserId: ", error);
+                return null;
+            }
+        }
+        async function fetchLatestGameID(userId){
+            let gameUserID = await fetchgameUserId(userId);
+            if(!gameUserID){
+                console.error("No gameUserId: ", gameUserID);
+            }
+            console.log("New gamUserID: ", gameUserID);
+
+            let hostname = "localhost";
+            let username = "cocarroll06";
+            let password = "ymg9g0sCgqxDf58f";
+            let database = "CSC1034_CW_47";
+            let query = `SELECT gameID FROM gameTable WHERE gameuserId = ${gameUserID} ORDER BY gameID DESC LIMIT 1;`
+
+            console.log(`Executing query: ${query}`);
+
+            let params = new URLSearchParams();
+                params.append('hostname', hostname);
+                params.append('username', username);
+                params.append('password', password);
+                params.append('database', database);
+                params.append('query', query);
+
+                let url = 'https://cocarroll06.webhosting1.eeecs.qub.ac.uk/dbConnector.php';
+                try {
+                    let response = await fetch(url, {
+                        method: 'POST',
+                        headers: {"Content-Type":"application/x-www-form-urlencoded"},
+                        body: params
+                    }); //Waits for a response from the fetch
+
+                    if(!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+                    let result = await response.json(); //Waits for the JSON to be parsed
+
+                    if(result.data && result.data.length > 0){
+                        let latestGameID = result.data[0].gameID;
+                        console.log("Fetched gameid: ", latestGameID);
+                        return latestGameID;
+                    }else{
+                        console.log("No gameID found for the given gameuserID.");
+                        return null;
+                    }
+                }catch (error){
+                    console.error("Error fetching gameId: ", error);
+                    return null;
+                }
+        }
+
+        async function fetchPowerFromGameID(gameID) {
+            if(!gameID){
+                console.error("Error fetching latest gameID:");
+                return null;
+            }
+            
+            let hostname = "localhost";
+            let username = "cocarroll06";
+            let password = "ymg9g0sCgqxDf58f";
+            let database = "CSC1034_CW_47";
+            let query = `SELECT power FROM gameTable WHERE gameID = ${gameID};`
+
+            let params = new URLSearchParams();
+                params.append('hostname', hostname);
+                params.append('username', username);
+                params.append('password', password);
+                params.append('database', database);
+                params.append('query', query);
+
+                let url = 'https://cocarroll06.webhosting1.eeecs.qub.ac.uk/dbConnector.php';
+                try {
+                    let response = await fetch(url, {
+                        method: 'POST',
+                        headers: {"Content-Type":"application/x-www-form-urlencoded"},
+                        body: params
+                    }); //Waits for a response from the fetch
+
+                    if(!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+                    let result = await response.json(); //Waits for the JSON to be parsed
+
+                    if(result.data && result.data.length > 0){
+                        let power = result.data[0].power;
+                            console.log("Fetched power: ", power);
+                            return power;
+                    }else{
+                        console.log("No power found for the given gameuserID.");
+                        return null;
+                    }
+                    }catch (error){
+                        console.error("Error fetching power: ", error);
+                        return null;
+                    }
+        }
+
+        async function fetchLatestPower(userId){
+            let latestGameID = await fetchLatestGameID(userId);
+            if(!latestGameID){
+                console.error("No gameID found");
+                return null;
+            }
+            return await fetchPowerFromGameID(latestGameID);
+        }
+
+        fetchgameUserId(userId);
+        fetchLatestGameID(userId);
+        fetchLatestPower(userId);
+
+        function playSoundAndRedirect(url) {
+            const clickSound = document.getElementById("clickSound");
+            clickSound.currentTime = 0; //Restart sound if already playing
+            clickSound.play();
+            //Delay redirect to allow sound to play
+            setTimeout(() => {
+                window.location.href = url;
+            }, 170);
+        }
+    </script>
+</body>
+</html>
