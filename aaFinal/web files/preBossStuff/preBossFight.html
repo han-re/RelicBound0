@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RelicBound: BossFight</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body style="background-image: url('images/background.jpg')">
+    <div id="gifOverlay">
+        <img src="images/black-hole-11202.gif" alt="Loading Animation">
+    </div>
+    <audio id="clickSound">
+        <source src="audio/tapRB.MP3" type="audio/mpeg">
+    </audio>
+    <header>
+        <h1>Mission: Boss Fight</h1>
+     </header>
+    <img src="images/My-img8bit-com-Effect.gif" class="img-resize"/>
+    <style>
+        .img-resize {
+            width: 25%;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+    </style>
+    <p>You have travelled back to present time. It comes down to this. The final battle.</p>
+    <p>You and Vorlax fight it out, your powers are equal. This may take a while.</p>
+    <p>While you are recovering, you see a faint shadow appear. The same mysterious figure from before appears.</p>
+    <p>"This battle will continue for eternity. Only one thing can end it for good. There is a secret fourth relic located in the barren battlefield of The Great War. Beware of The Fallen Soldier." </p>
+    <button style="width: 30%;" type="button" onclick="playSoundAndRedirect('discardItem.html')">Track down fourth relic</button>
+    <button style="width: 35%;" type="button" onclick="playSoundAndRedirect('continueFighting.html')">Continue fighting the boss</button>
+    <script>
+        function playSoundAndRedirect(url) {
+            const clickSound = document.getElementById("clickSound");
+            clickSound.currentTime = 0; //Restart sound if already playing
+            clickSound.play();
+            //Delay redirect to allow sound to play
+            setTimeout(() => {
+                window.location.href = url;
+            }, 170);
+        }
+    </script>
+</body>
+</html>
