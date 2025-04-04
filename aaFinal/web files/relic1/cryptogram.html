@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cryptogram Puzzle</title>
+    <link rel="stylesheet" href="css/style7.css">
+</head>
+<body style="background-image: url('images/background.jpg')">
+    <div id="fade-overlay"></div>
+    <audio id="clickSound">
+        <source src="audio/tapRB.MP3" type="audio/mpeg">
+    </audio>
+    <header class="title">
+        <h2>Cryptogram Puzzle</h2>
+    </header>
+
+    <main class="main">
+
+        <section class="cryptImg">
+            <img src="images/crypt.jpg" alt="Cryptogram Hieroglyphics">
+        </section>
+        
+        <section class="decipher">
+        <p>Enter your decrypted phrase below:</p>
+        <p id="timer">Time left: 40s</p>
+        <input type="text" id="userInput" placeholder="Type your answer here">
+        <button onclick="checkAnswer()" onclick="playSoundAndRedirect()">Check Answer</button>
+        <p id="feedback"></p>
+        </section>
+    </main>
+
+    <script>
+        const correctAnswer = "A NEW SUN RISES"; 
+        let timeLeft = 40;
+        let timerInterval = setInterval(updateTimer, 1000);
+
+        function updateTimer() {
+            document.getElementById("timer").textContent = `Time left: ${timeLeft}s`;
+            if (timeLeft === 0) {
+                clearInterval(timerInterval);
+                document.getElementById("feedback").textContent = "Time's up! You lost!";
+                document.getElementById("feedback").style.color = "red";
+                document.getElementById("userInput").disabled = true;
+                setTimeout(function() {
+                    window.location.href = 'cryptogram.html';
+                }, 3000);
+            }
+            timeLeft--;
+        }
+
+        function checkAnswer() {
+            let userInput = document.getElementById("userInput").value.toUpperCase();
+            let feedback = document.getElementById("feedback");
+
+            if (userInput === correctAnswer) {
+                clearInterval(timerInterval);
+                feedback.textContent = "Correct! Well done! Directing you...";
+                feedback.style.color = "green";
+                setTimeout(function() {
+                    window.location.href = 'cryptogramSuccess.html';
+                }, 3000);
+            } else {
+                feedback.textContent = "Incorrect. Try again";
+                feedback.style.color = "red";
+                setTimeout(function() {
+                    window.location.href = 'cryptogram.html';
+                }, 7000);
+            }
+        }
+
+        function playSoundAndRedirect(url) {
+            const clickSound = document.getElementById("clickSound");
+            clickSound.currentTime = 0; //Restart sound if already playing
+            clickSound.play();
+            //Delay redirect to allow sound to play
+            setTimeout(() => {
+                window.location.href = url;
+            }, 170);
+        }
+    </script>
+</body>
+</html>

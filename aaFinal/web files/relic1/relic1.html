@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relic 1</title>
+    <link rel="stylesheet" href="css/style5.css">
+</head>
+<body style="background-image: url('images/background.jpg')">
+    <div id="gifOverlay">
+        <img src="images/black-hole-11202.gif" alt="Loading Animation">
+    </div>
+    <audio id="clickSound">
+        <source src="audio/tapRB.MP3" type="audio/mpeg">
+    </audio>
+    <header class="title">
+        <h1>RelicBound</h1>
+    </header>
+
+    <main class="main">
+        <section class="imageSide">
+            <div class="azTemple">
+                <img src="images/aztectemple.png" alt="Transported to an Aztec Temple">
+            </div>
+        </section>
+
+        <section class="textSide">
+            <div class="textBox">
+                <p style="background-image: url('images/bgbtn.png')">You find yourself inside a crumbling Aztec temple. The air is thick with dust, and the distant rumble of collapsing stone echoes throughout the chamber. <br><br>You hear the creak of ancient wood and the thunderous sound of rocks shifting as the temple slowly begins to fall apart. You must act fast.</p>
+                <br>
+                <p style="background-image: url('images/bgbtn.png')">In front of you, there is only one exit: <br><br>A passageway engulfed in vines leading to a set of ancient inscriptions carved into the stone. <br><br>Move swiftly - time is running out.</p>
+                <br>
+                <button class="choice2" onclick="playSoundAndRedirect('Cryptogram.html')">Begin challenges</button>
+            </div>
+        </section>
+    </main>
+    <script>
+        function playSoundAndRedirect(url) {
+            const clickSound = document.getElementById("clickSound");
+            clickSound.currentTime = 0; //Restart sound if already playing
+            clickSound.play();
+            //Delay redirect to allow sound to play
+            setTimeout(() => {
+                window.location.href = url;
+            }, 170);
+        }
+    </script>
+</body>
+</html>
