@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Global Statistics</title>
+  <link rel="stylesheet" href="globalstats.css"> <!-- Linking to the CSS file for styling -->
+</head>
+<body>
+    
+  <main class="main">
+    <!-- Title at the top of the page -->
+    <header class="statsTitle">
+      <h1>Global Statistics</h1>
+    </header>
+
+    <!-- Section to show which powers were selected the most -->
+    <div id="statsDisplay" class="powerStats"></div>
+
+    <!-- Extra stat stuff below -->
+
+    <!-- Total player counts and number of powers selected -->
+    <section class="statsSection">
+      <h2>Total Statistics</h2>
+      <div id="totalStats" class="powerStats"></div>
+    </section>
+
+    <!-- Shows how many players chose each power (as a percentage) -->
+    <section class="statsSection">
+      <h2>Power Usage Percentages</h2>
+      <div id="powerPercentages" class="powerStats"></div>
+    </section>
+
+    <!-- Win rates for each power (how often players with that power beat the boss) -->
+    <section class="statsSection">
+      <h2>Boss Victory Rates</h2>
+      <div id="successRates" class="powerStats"></div>
+    </section>
+
+    <!-- Average time taken by players to finish the game with each power -->
+    <section class="statsSection">
+      <h2>Average Play Times</h2>
+      <div id="completionTimes" class="powerStats"></div>
+    </section>
+
+</main>
+
+<script>
+  // function fetches all the stats from the server
+  async function loadPowerStats() {
+    // Configuration for connecting to the database and which queries to run
+    const config = {
+      host: "localhost",
+      user: "rananth01",
+      pass: "sr2gW4z34rW7GbrL",
+      db: "CSC1034_CW_47",
+      queries: {
+        powerCount: `SELECT power, COUNT(*) as count FROM gameTable WHERE power IS NOT NULL GROUP BY power ORDER BY count DESC`,
+        totalPlayers: `SELECT COUNT(DISTINCT gameuserID) as total FROM gameTable`,
+        totalPowersSelected: `SELECT COUNT(*) as total FROM gameTable WHERE power IS NOT NULL`,
+        successRate: `SELECT power, COUNT(CASE WHEN defeatedBoss = 1 THEN 1 END) * 100.0 / COUNT(*) as success_rate FROM gameTable WHERE power IS NOT NULL GROUP BY power`,
+        averageTime: `SELECT power, AVG(timeUsed) as avg_time FROM gameTable WHERE power IS NOT NULL AND defeatedBoss = 1 GROUP BY power`,
+        powerPercentages: `SELECT power, COUNT(*) * 100.0 / (SELECT COUNT(*) FROM gameTable WHERE power IS NOT NULL) as percentage FROM gameTable WHERE power IS NOT NULL GROUP BY power ORDER BY percentage DESC`
+      }
+    };
+
+    const stats = {}; //stre all the data here
+
+    try {
+      // Loop through each SQL query and send it to the server
+      for (const [key, query] of Object.entries(config.queries)) {
+        const params = new URLSearchParams({
+          hostname: config.host,
+          username: config.user,
+          password: config.pass,
+          database: config.db,
+          query: query
+        });
+
+        // Making request to the PHP backend
+        const res = await fetch('https://rananth01.webhosting1.eeecs.qub.ac.uk/dbConnector.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: params
+        });
+
+        if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+
+        const data = await res.json(); // Parse the JSON response
+        stats[key] = data.data; // Save the data under the right name
+      }
+
+      // Once everything's loaded, display the stats on the page
+      renderAllStats(stats);
+
+    } catch (err) {
+      console.error('Could not fetch stats:', err); // Catch and show any errors
+    }
+  }
+
+  // This function calls all the smaller render functions to display different sections
+  function renderAllStats(stats) {
+    renderPowerCounts(stats.powerCount);
+    renderTotal(stats.totalPlayers, stats.totalPowersSelected);
+    renderSection(stats.powerPercentages, 'powerPercentages', '%', 'of Players');
+    renderSection(stats.successRate, 'successRates', '%', 'Victory Rate', 'success_rate');
+    renderSection(stats.averageTime, 'completionTimes', '', 'Avg. Time Used', 'avg_time');
+  }
+
+  // Shows the number of players who picked each power
+  function renderPowerCounts(data) {
+    const container = document.getElementById('statsDisplay');
+    container.innerHTML = ''; // Clear out previous data
+
+    if (!data) return;
+
+    data.forEach((item, i) => {
+      const box = document.createElement('div');
+      box.className = 'statBox' + (i === 0 ? ' mostPopular' : ''); // Add "mostPopular" class to the top result
+      box.dataset.power = item.power;
+
+      // Create the HTML inside the stat box
+      box.innerHTML = `
+        <div class="powerName">${item.power || 'Unknown'}</div>
+        <div class="powerCount">${item.count || 0}</div>
+        <div class="powerLabel">Users</div>
+        ${i === 0 ? '<div class="popularLabel">Most Popular!</div>' : ''}
+      `;
+      container.appendChild(box);
+    });
+
+    // Highlight the least popular one too
+    const least = data[data.length - 1];
+    if (least) {
+      const box = document.querySelector(`[data-power="${least.power}"]`);
+      if (box) box.classList.add('leastPopular');
+    }
+  }
+
+  // Shows total number of players and how many powers were selected in total
+  function renderTotal(players, powers) {
+    const container = document.getElementById('totalStats');
+    if (!players?.[0] || !powers?.[0]) return;
+
+    container.innerHTML = `
+      <div class="statBox">
+        <div class="powerName">Total Players</div>
+        <div class="powerCount">${players[0].total}</div>
+      </div>
+      <div class="statBox">
+        <div class="powerName">Powers Selected</div>
+        <div class="powerCount">${powers[0].total}</div>
+      </div>
+    `;
+  }
+
+  // Renders a generic section (e.g. percentages, success rates, average times)
+  function renderSection(data, containerId, suffix = '', label = '', valueKey = 'percentage') {
+    const container = document.getElementById(containerId);
+    if (!data) return;
+
+    data.forEach(item => {
+      const box = document.createElement('div');
+      box.className = 'statBox';
+
+      // Display stat with an optional suffix (like %)
+      box.innerHTML = `
+        <div class="powerName">${item.power}</div>
+        <div class="powerCount">${Math.round(item[valueKey])}${suffix}</div>
+        <div class="powerLabel">${label}</div>
+      `;
+      container.appendChild(box);
+    });
+  }
+
+  // Start loading the stats as soon as the page finishes loading
+  window.onload = loadPowerStats;
+</script>
+</body>
+</html>
