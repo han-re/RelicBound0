@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Powers Selection</title>
+    <link rel="stylesheet" href="style1.css">
+</head>
+<body>
+    <div id="fade-overlay"></div>
+
+   <header class="startingText">
+    <h1>Choose Your Power</h1>
+    <h3 id="warning">Your choice will affect your journey. Choose wisely.</h3>
+    <br><br>
+   </header>
+
+    <section class="powerSection">
+        <div class="powerOption" onclick="selectPower('Invisibility')">
+            <img src="project_images/invisibility.jpeg" alt="Power of Invisibility - Become invisible at will">
+            <div class="powerName">INVISIBILITY</div>
+            <div class="description">Become completely invisible at will. Allowing for stealth, evasion, and surprise attacks. Players can move undetected, bypass obstacles, and avoid danger.</div>
+        </div>
+
+        <div class="powerOption" onclick="selectPower('Telekinesis')">
+            <img src="project_images/telekinesis.jpeg" alt="Power of Telekinesis - Read minds and move objects">
+            <div class="powerName">TELEKINESIS</div>
+            <div class="description">Read minds and move objects using only your thoughts. Grants players control over objects with their mind and the ability to read or influence thoughts.</div>
+        </div>
+
+        <div class="powerOption" onclick="selectPower('Super Strength')">
+            <img src="project_images/superstrength.jpeg" alt="Power of Superstrength - Lift and break objects">
+            <div class="powerName">SUPERSTRENGTH</div>
+            <div class="description">Supernatural strength. Allows players to lift heavy objects, break barriers, and overpower opponents with ease.</div>
+        </div>
+    </section>
+
+    <script>
+        let currentGameUserID=2;
+        let gameID= 33;
+
+        async function savePowerToDatabase(power) {
+            let hostname = "localhost";
+            let username = "rananth01";
+            let password = "sr2gW4z34rW7GbrL";
+            let database = "CSC1034_CW_47";
+            let query = `UPDATE gameTable SET power = '${power}' WHERE gameID = ${gameID} AND gameuserID = ${currentGameUserID}`;
+
+            let params = new URLSearchParams();
+            params.append('hostname', hostname);
+            params.append('username', username);
+            params.append('password', password);
+            params.append('database', database);
+            params.append('query', query);
+
+            let url = 'https://rananth01.webhosting1.eeecs.qub.ac.uk/dbConnector.php';
+            try {
+                let response = await fetch(url, {
+                    method: 'POST',
+                    headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                    body: params
+                });
+
+                if(!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                let result = await response.json();
+
+                if (result.error) {
+                    console.log(result.error.toString());
+                } else {
+                    console.log("Power saved successfully");
+                }
+            } catch (error) {
+                console.error('Error saving power:', error);
+            }
+        }
+
+        async function selectPower(power) {
+            // Store in localStorage
+            localStorage.setItem('chosenPower', power);
+            console.log(localStorage.getItem('chosenPower'));
+            // Save to database
+            await savePowerToDatabase(power);
+            
+            // Navigate to next page
+            window.location.href = 'context2.html';
+        }
+    </script>
+
+
+
+</body>
+</html>
