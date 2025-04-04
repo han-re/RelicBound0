@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RelicBound: Final Option</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body style="background-image: url('images/background.jpg')">
+    <audio controls autoplay muted>
+        <source src="audio/ending.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="clickSound">
+        <source src="audio/tapRB.MP3" type="audio/mpeg">
+    </audio>
+    <div id="fade-overlay"></div>
+    <header>
+        <h1>Mission: Defeat the Boss</h1>
+     </header>
+    <img src="images/crown.png" class="img-resize"/>
+    <style>
+        .img-resize {
+            transform: scale(1.5);
+            margin: 50px;
+        }
+    </style>
+    <p>"You have brought victory to your name!"</p>
+    <p>Congratulations for making your journey worthwhile,</p>
+    <p>You have been crowned and gained the title 'Saint of Relics'.</p>
+    <p>Now, you and your freinds can live in peace with the world free from the final boss, The darkload, mcdowell.</p>
+    <p>Your legacy will live past you...</p>
+    <button style="width: 10%;" type="button" onclick="playSoundAndRedirect('summary.html')">NEXT</button>
+
+    <!-- ADD FROM HERE -->
+    <div id="results"></div>
+
+<script>
+
+
+
+    let userId = localStorage.getItem("userId");
+            let gameuserId = localStorage.getItem("gameuserId");
+            let gameId = localStorage.getItem("gameId");
+
+    // let userId = 81;
+    //         let gameuserId = 3;
+    //         let gameId = 34;
+
+        // Function to update defeatedBoss field using game ID from local storage
+
+        async function updateDefeatedBossStatus() {
+        let hostname = 'localhost';
+        let username = 'rcareysmall01';
+        let password = 'q1YsjQG0CHDhBXQ5';
+        let database = 'CSC1034_CW_47';
+        let query = `UPDATE gameTable SET defeatedBoss=1 WHERE gameId = ${gameId}`;
+
+        let params = new URLSearchParams();
+        params.append('hostname', hostname);
+        params.append('username', username);
+        params.append('password', password);
+        params.append('database', database);
+        params.append('query', query);
+
+        let url = 'https://rcareysmall01.webhosting1.eeecs.qub.ac.uk/dbConnector.php';
+
+        try {
+            let response = await fetch(url, {
+                method: 'POST',
+                body: params
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            let rawResponse = await response.text();
+            console.log("Raw Response:", rawResponse);
+
+            let result;
+            try {
+                result = JSON.parse(rawResponse);
+            } catch (error) {
+                console.error("Error parsing JSON:", error);
+                
+                return;
+            }
+
+            let resultsDiv = document.getElementById("results");
+            console.log("ResultsDiv:", resultsDiv); // If null, the element is missing
+
+
+    if (resultsDiv) {
+        console.log( "Boss defeat status updated successfully!");
+    } else {
+        console.error("Error: 'results' element not found in DOM.");
+    }
+
+
+            if (result.error) {
+                console.log(result.error.toString());
+                
+            } else if (result.success) {
+                console.log("Update successful!");
+                
+            } else {
+                console.log("Update failed!");
+                
+            }
+        } catch (error) {
+            console.error("Error during fetch:", error);
+            
+        }
+    }
+
+    window.onload = function() {
+        updateDefeatedBossStatus();
+    };
+
+    window.addEventListener("DOMContentLoaded", function () {
+        updateDefeatedBossStatus();
+    });
+
+    function playSoundAndRedirect(url) {
+        const clickSound = document.getElementById("clickSound");
+        clickSound.currentTime = 0; //Restart sound if already playing
+        clickSound.play();
+        //Delay redirect to allow sound to play
+        setTimeout(() => {
+            window.location.href = url;
+        }, 170);
+    }
+</script>
+</body>
+</html>

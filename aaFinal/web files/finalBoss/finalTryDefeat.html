@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RelicBound: Boss Fight</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body style="background-image: url('images/background.jpg')">
+    <div id="fade-overlay"></div>
+    <audio id="clickSound">
+        <source src="audio/tapRB.MP3" type="audio/mpeg">
+    </audio>
+    <header>
+        <h1>Mission: Defeat the Boss</h1>
+     </header>
+    <img src="images/gameOver.png" class="img-resize"/>
+    <style>
+        .img-resize {
+            transform: scale(1.25);
+            margin: 50px;
+        }
+    </style>
+    <p>"You have lost due to your eagerness to win..."</p>
+    <p>By rushing into battle, you have not gained enough experience to defeat the Boss.</p>
+    <p>You have used up all your chances and made waste of the journey you embarked on...</p>
+    <button style="width: 65%;" type="button" onclick="playSoundAndRedirect('home.html')">Return to Homepage</button>
+    <script>
+        function playSoundAndRedirect(url) {
+            const clickSound = document.getElementById("clickSound");
+            clickSound.currentTime = 0; //Restart sound if already playing
+            clickSound.play();
+            //Delay redirect to allow sound to play
+            setTimeout(() => {
+                window.location.href = url;
+            }, 170);
+        }
+    </script>
+</body>
+</html>
