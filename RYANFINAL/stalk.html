@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .menuContainer {
+            height: 100%;
+            width: calc(var(--btn-size) * 10);
+            background: rgb(0, 0, 0,0);
+            border: 4px solid #8b000000;
+            padding: 20px;
+            text-align: center;
+            color: white;
+            display: block;
+        }
+            .settingsButton {
+            width: 7.5vw;   
+            height: 3vw; 
+            text-align: center;
+            padding: 0.2vw;
+            background-image: url('https://i.ibb.co/rb2TWXL/bgbtn.png');
+	        border: 2px solid #000;
+            cursor: pointer;
+            font-size: 1em;
+            color: #ffffff;
+            transition: background-color 0.3s; 
+            position: fixed; 
+            bottom:2vw;
+            right:2vw;
+            z-index: 1000;
+            
+        }
+
+        .settingsButton:hover {
+            text-shadow: 2px 2px #202013CC;
+            color: #FFFFA0;
+            border: 2px solid #ffffff;
+            
+            }
+
+            #settingsScreen {
+            display: none;
+        }
+       
+    
+            #settingsScreen {
+            display: none;
+        }
+
+        .settingsOption {
+            width: flex;
+            display: flex;
+            font-size: 1.5em;
+            color: #ffffff;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-image: url('https://i.ibb.co/rb2TWXL/bgbtn.png');
+	        border: 2px solid #000;
+            transition: background-color 0.3s;
+        }
+            
+        .settingsOption:hover {
+        text-shadow: 2px 2px #202013CC;
+		color: #FFFFA0;
+        border: 2px solid #ffffff;
+        
+        }
+
+    </style>
+    <title>Relic 2</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body style="background-image: url('images/9ace2946-3a34-4e16-a8f5-c603c77dbfb7.jpg')">
+    
+    <audio id="backgroundMusic" loop>
+        <source src="fantasy.mp3" type="audio/mpeg">
+        
+    </audio>
+
+    <div id="fade-overlay"></div>
+    <audio id="clickSound">
+        <source src="audio/tapRB.MP3" type="audio/mpeg">
+    </audio>
+
+    <div id="mainMenu" style="display:block">
+    <header>
+        <h1>Mission: Find the 2nd Relic</h1>
+     </header>
+    <img src="images/Untitled design (1).png" class="img-resize"/>
+    <style>
+        .img-resize {
+            transform: scale(1.5);
+            margin: 50px;
+        }
+    </style>
+    <p>Every city has its patterns. The changing of the watch, the lull of midnight, the moments when guards grew careless. I watch, I listen, I learn. Soon, I’ll find the crack in the kingdom’s armour. And when I do, the relic is mine.</p>
+    <div style = "display: flex; flex-direction: column; align-items: center;">
+    <button style="width: 30%;" id="returnHome" type="button" onclick="playSoundAndRedirect('relicChoice.html')">Next</button>
+    <div id="settingsBtn" class="settingsButton"> Settings</div> 
+    </div>  
+    </div>
+
+    <div class="menuContainer" id="settingsScreen" style = "width: 45vw;  height: 45vw;">
+        <h1 class="title" style="margin-bottom: 8vw;" >SETTINGS</h1 >
+    <div class="settingsOption">
+        <span>Music</span>
+        <label class="toggleSwitch">
+            <input type="checkbox" id="musicToggle">
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="settingsOption" id="resumeBtn">
+        <span>Resume Game</span>
+    </div>
+
+    <div class="settingsOption" id="backToMainMenu">
+        <span>Back To Main Menu<span>  
+    </div>
+
+    </div>
+    </div>
+
+    <script>
+        function playSoundAndRedirect(url) {
+            const clickSound = document.getElementById("clickSound");
+            clickSound.currentTime = 0; //Restart sound if already playing
+            clickSound.play();
+            //Delay redirect to allow sound to play
+            setTimeout(() => {
+                window.location.href = url;
+            }, 170);
+        }
+
+        let dbConfig = new URLSearchParams({
+        hostname: 'localhost',
+        username: 'sdas06',
+        password: '6g5X6MLgPjfWMSBS',
+        database: 'CSC1034_CW_47',
+        query: ''
+        });
+
+        //this var will be use to store the default screens id before the settings screen pops up 
+        //you willl have to change mainMenu according to what the id of the main block
+        const mainMenu = document.getElementById('mainMenu');
+        const settingsScreen = document.getElementById('settingsScreen');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const settingsBtn = document.getElementById('settingsBtn');
+
+        // to show settings
+        function showSettings() {
+            mainMenu.style.display = 'none';
+            settingsScreen.style.display = 'block';
+        }
+        
+        function resumeGame() {
+            mainMenu.style.display = 'block';
+            settingsScreen.style.display = 'none';
+        }
+
+        settingsBtn.addEventListener('click', showSettings);
+
+
+        //settings page functionality
+        
+        const resumeBtn = document.getElementById('resumeBtn');
+        const backtoMainMenu = document.getElementById('backToMainMenu');
+        
+       
+       async function toMainMenu(){
+
+            const currentUrl = window.location.href;
+            
+            console.log("Before navigation - UserID:", sessionStorage.getItem("userId"));
+            console.log("Before navigation - GameUserID:", sessionStorage.getItem("gameuserID"));
+            // Save the current URL to the lastLevel column in gameTable
+            console.log("Current URL:", currentUrl);
+             await saveLastLevel(currentUrl);
+    
+            // Then redirect to the main menu
+            window.location.href = 'StartPageTest.html';
+        }
+
+    
+        resumeBtn.addEventListener('click', resumeGame);
+        backtoMainMenu.addEventListener('click',toMainMenu);
+
+        window.addEventListener('load', function() {
+        backgroundMusic.play().catch(error => {
+        console.log('Auto-play was prevented. User interaction needed to start audio.');
+        // Many browsers require user interaction before playing audio
+            });
+        });
+
+        // Music toggle functionality
+        const musicToggle = document.getElementById('musicToggle');
+        musicToggle.checked = true; // Set checked by default
+
+        musicToggle.addEventListener('change', function() {
+        if (this.checked) {
+        backgroundMusic.play();
+         } 
+
+        else {
+        backgroundMusic.pause();
+        }
+    });
+
+// Additional function to ensure music can start after user interaction
+        document.addEventListener('click', function() {
+        if (musicToggle.checked && backgroundMusic.paused) {
+        backgroundMusic.play();
+        }
+        }, {once: true});
+
+
+        
+async function toMainMenu() {
+    // Get the current page URL
+
+    const currentUrl = window.location.href;
+
+    console.log(currentUrl);
+    // Save the current URL to the lastLevel column in gameTable
+    await saveLastLevel(currentUrl);
+    
+    // Then redirect to the main menu
+    window.location.href = 'StartPageTest.html';
+}
+////////////////////////////////////////////////////////////////////////////
+
+    async function saveLastLevel(pageUrl) {
+    // Get the current gameID from session storage
+
+    const gameId = localStorage.getItem("gameID");
+    console.log(gameId);
+    
+    if (!gameId) {
+        console.error("Cannot save last level: No active game");
+        return;
+    }
+    
+    // Create query to update the lastLevel in gameTable
+        const query = `UPDATE gameTable SET lastLevel = '${pageUrl}' WHERE gameID = ${gameId}`;
+        dbConfig.set('query', query);
+    
+        try {
+        const response = await fetch('https://sdas06.webhosting1.eeecs.qub.ac.uk/dbConnector.php', {
+            method: "POST",
+            body: dbConfig
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            console.log("Last level saved successfully:", pageUrl);
+
+        } else {
+            console.error("Failed to save last level:", result.message);
+        }
+        } catch (error) {
+        console.error("Error saving last level:", error);
+        }
+    }
+    </script>
+</body>
+</html>
