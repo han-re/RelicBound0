@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relic 2</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body style="background-image: url('images/9ace2946-3a34-4e16-a8f5-c603c77dbfb7.jpg')">
+    <div id="fade-overlay"></div>
+    <audio id="clickSound">
+        <source src="audio/tapRB.MP3" type="audio/mpeg">
+    </audio>
+    <header>
+        <h1>Mission: Find the 2nd Relic</h1>
+     </header>
+    <img src="images/Untitled design copy.png" class="img-resize"/>
+    <style>
+        .img-resize {
+            transform: scale(1.5);
+            margin: 50px;
+        }
+    </style>
+    <p>"You ask to borrow the heart of my kingdom, the relic upon which my people’s prosperity depends. It is not mine to give lightly, nor its absence a burden we could bear. Since you cannot prove to me that in its absence, my kingdom will not suffer, and that in your hands, it will return undamaged, I cannot accept such a bargain."</p>
+    <button style="width: 30%;" id="returnHome" type="button" onclick="playSoundAndRedirect('relicChoice.html')">Next</button>
+    <script>
+        function playSoundAndRedirect(url) {
+        const clickSound = document.getElementById("clickSound");
+        clickSound.currentTime = 0; //Restart sound if already playing
+        clickSound.play();
+        //Delay redirect to allow sound to play
+        setTimeout(() => {
+            window.location.href = url;
+        }, 170);
+    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relic 2</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body style="background-image: url('images/bdcfd870-6b19-43eb-91f0-0265ddb952b8.jpg')">
+    <div id="fade-overlay"></div>
+    <audio id="clickSound">
+        <source src="audio/tapRB.MP3" type="audio/mpeg">
+    </audio>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let timeLeft = 60;
+            const timerElement = document.getElementById("timer");
+            
+            const countdown = setInterval(() => {
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    timerElement.textContent = timeLeft;
+                } else {
+                    clearInterval(countdown);
+                    window.location.href = "relic2Fail2.html";
+                }
+            }, 1000);
+        });
+    </script>
+    <header>
+        <h1>Mission: Find the 2nd Relic</h1>
+     </header>
+    <img src="images/maze2.png" class="img-resize"/>
+    <style>
+        .img-resize {
+            transform: scale(1.5);
+            margin: 50px;
+        }
+    </style>
+    <p>Time remaining:  <span id="timer">60</span> seconds </p>
+    <p>QUICK! Using invisibility, select the path through which you will steal the relic from the centre of the maze.</p>
+        <button style="width: 10%;" type="button" onclick="playSoundAndRedirect('relic2Fail2.html')">A</button>
+        <button style="width: 10%;" type="button" onclick="playSoundAndRedirect('relic2Fail2.html')">B</button>
+        <button style="width: 10%;" type="button" onclick="playSoundAndRedirect('relic2Success2.html')">C</button>
+    <script>
+        function playSoundAndRedirect(url) {
+            const clickSound = document.getElementById("clickSound");
+            clickSound.currentTime = 0; //Restart sound if already playing
+            clickSound.play();
+            //Delay redirect to allow sound to play
+            setTimeout(() => {
+                window.location.href = url;
+            }, 170);
+        }
+    </script>
+</body>
+</html>

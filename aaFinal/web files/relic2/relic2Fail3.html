@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relic 2</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body style="background-image: url('images/bdcfd870-6b19-43eb-91f0-0265ddb952b8.jpg')">
+    <div id="fade-overlay"></div>
+    <audio id="clickSound">
+        <source src="audio/tapRB.MP3" type="audio/mpeg">
+    </audio>
+    <header>
+        <h1>Mission: Failed</h1>
+     </header>
+    <img src="images/maze3sol.png" class="img-resize"/>
+    <style>
+        .img-resize {
+            transform: scale(1.5);
+            margin: 50px;
+        }
+    </style>
+    <p>The correct answer was 'B'.</p>
+    <p>Your quest has been for nothing, your friends' fate is unknown, and you will spend the rest of your days in a cell.</p>
+    <button style="width: 40%;" type="button" onclick="playSoundAndRedirect('home.html')">Return to Homescreen</button>
+    <div id="inventory">
+        Inventory:
+    <div id="inventory-items"></div>
+    </div>
+    <script>
+        function addToInventory(itemSrc){
+            let inventory = document.getElementById("inventory-items");
+
+            let item = document.createElement("img");
+            item.src = itemSrc;
+            item.alt = "Inventory Item";
+            item.style.width = "50px";
+            item.style.height = "50px";
+            item.style.border = "2px solid white";
+            item.style.borderRadius = "5px";
+
+            inventory.appendChild(item);
+        }
+        addToInventory('images/inscription.jpg')
+        addToInventory('images/fullSword.jpg')
+        addToInventory('images/relic1img.png')
+
+        function playSoundAndRedirect(url) {
+            const clickSound = document.getElementById("clickSound");
+            clickSound.currentTime = 0; //Restart sound if already playing
+            clickSound.play();
+            //Delay redirect to allow sound to play
+            setTimeout(() => {
+                window.location.href = url;
+            }, 170);
+        }
+    </script>
+</body>
+</html>

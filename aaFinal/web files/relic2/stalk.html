@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relic 2</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body style="background-image: url('images/9ace2946-3a34-4e16-a8f5-c603c77dbfb7.jpg')">
+    <div id="fade-overlay"></div>
+    <audio id="clickSound">
+        <source src="audio/tapRB.MP3" type="audio/mpeg">
+    </audio>
+    <header>
+        <h1>Mission: Find the 2nd Relic</h1>
+     </header>
+    <img src="images/Untitled design (1).png" class="img-resize"/>
+    <style>
+        .img-resize {
+            transform: scale(1.5);
+            margin: 50px;
+        }
+    </style>
+    <p>Every city has its patterns. The changing of the watch, the lull of midnight, the moments when guards grew careless. I watch, I listen, I learn. Soon, I’ll find the crack in the kingdom’s armour. And when I do, the relic is mine.</p>
+    <button style="width: 30%;" id="returnHome" type="button" onclick="playSoundAndRedirect('relicChoice.html')">Next</button>
+    <script>
+        function playSoundAndRedirect(url) {
+            const clickSound = document.getElementById("clickSound");
+            clickSound.currentTime = 0; //Restart sound if already playing
+            clickSound.play();
+            //Delay redirect to allow sound to play
+            setTimeout(() => {
+                window.location.href = url;
+            }, 170);
+        }
+    </script>
+</body>
+</html>
