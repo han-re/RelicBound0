@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battle</title>
+    <link rel="stylesheet" href="css/style2.css">
+</head>
+<body style="background-image: url('images/background.jpg')">
+    <div id="fade-overlay"></div>
+    <audio id="clickSound">
+        <source src="audio/tapRB.MP3" type="audio/mpeg">
+    </audio>
+    <header class="title">
+        <h1>RelicBound</h1>
+    </header>
+
+    <main class="yessir">
+        <section class="imageSide">
+            <div class="vFight">
+                <img src="images/villainfight.png" alt="SuperVillain is winning the fight.">
+            </div>
+        </section>
+
+        <section class="textSide">
+            <div class="textBox">
+                <p style="background-image: url('images/bgbtn.png')">The battlefield is in ruins. Fires burn, the air is thick with smoke, and the last remnants of your team struggle to stand. The final boss, a towering figure cloaked in shadow, stands over you, their weapon raised for the finishing blow.</p>
+                <br>
+                <p style="background-image: url('images/bgbtn.png')">BOSS: "This is the end. Your resistance was admirable, but ultimately... futile."</p>
+                <br>
+                <p style="background-image: url('images/bgbtn.png')">You struggle to move, gripping your wounds. Your vision blurs. Just as the boss swings, time seems to slow. A mysterious cloaked figure steps forward, extending a hand. Will you take it, or will you keep fighting?</p>
+                <br>
+                <button class="nextBtn" onclick="playSoundAndRedirect('context3.html')">Acknowledge the figure</button>
+                <button class="nextBtn" onclick="playSoundAndRedirect('option2.html')">Contine fighting</button>
+            </div>
+        </section>
+    </main>
+    <script>
+        function playSoundAndRedirect(url) {
+            const clickSound = document.getElementById("clickSound");
+            clickSound.currentTime = 0; //Restart sound if already playing
+            clickSound.play();
+            //Delay redirect to allow sound to play
+            setTimeout(() => {
+                window.location.href = url;
+            }, 170);
+        }
+    </script>
+    
+</body>
+</html>

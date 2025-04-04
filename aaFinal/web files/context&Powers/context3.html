@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mysterious Figure</title>
+    <link rel="stylesheet" href="css/style3.css">
+</head>
+<body style="background-image: url('images/background.jpg')">
+    <div id="fade-overlay"></div>
+    <audio id="clickSound">
+        <source src="audio/tapRB.MP3" type="audio/mpeg">
+    </audio>
+    <header class="title">
+        <h1>RelicBound</h1>
+    </header>
+
+    <main class="yessir">
+        <section class="imageSide">
+            <div class="vFight">
+                <img src="images/mFigure.jpeg" alt="Mysterious Figure approaches you.">
+            </div>
+        </section>
+
+        <section class="textSide">
+            <div class="textBox">
+                <p style="background-image: url('images/bgbtn.png')">MYSTERIOUS FIGURE: "You cannot win this fight... not yet. The power you need lies in the past. Go back, find the four ancient relics, and rewrite your fate."</p>
+                <br>
+                <p style="background-image: url('images/bgbtn.png')">Before you can react, the figure presses a glowing symbol onto your forehead. A surge of energy courses through you. The battlefield fades, and in a blinding flash, you are flung into the depths of time.</p>
+                <br>
+                <p style="background-image: url('images/bgbtn.png')">Darkness. Silence. "Save your friends... restore peace... fulfill your destiny," echos the Mysterious Figure.</p>
+                <br>
+                <button class="nextBtn" onclick="playSoundAndRedirect('relic1.html')">Next</button>
+            </div>
+        </section>
+    </main>
+    <script>
+        function playSoundAndRedirect(url) {
+            const clickSound = document.getElementById("clickSound");
+            clickSound.currentTime = 0; //Restart sound if already playing
+            clickSound.play();
+            //Delay redirect to allow sound to play
+            setTimeout(() => {
+                window.location.href = url;
+            }, 170);
+        }
+    </script>
+    
+</body>
+</html>
