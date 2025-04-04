@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relic 2</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .menuContainer {
+            height: 100%;
+            width: calc(var(--btn-size) * 10);
+            background: rgb(0, 0, 0,0);
+            border: 4px solid #8b000000;
+            padding: 20px;
+            text-align: center;
+            color: white;
+            display: block;
+        }
+            .settingsButton {
+            width: 7.5vw;   
+            height: 3vw; 
+            text-align: center;
+            padding: 0.2vw;
+            background-image: url('https://i.ibb.co/rb2TWXL/bgbtn.png');
+	        border: 2px solid #000;
+            cursor: pointer;
+            font-size: 1em;
+            color: #ffffff;
+            transition: background-color 0.3s; 
+            position: fixed; 
+            bottom: 2vw;
+            right: 2vw;
+            z-index: 1000;
+        }
+
+        .settingsButton:hover {
+            text-shadow: 2px 2px #202013CC;
+            color: #FFFFA0;
+            border: 2px solid #ffffff;
+            
+            }
+
+            #settingsScreen {
+            display: none;
+        }
+       
+    
+            #settingsScreen {
+            display: none;
+        }
+
+        .settingsOption {
+            width: flex;
+            display: flex;
+            font-size: 1.5em;
+            color: #ffffff;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-image: url('https://i.ibb.co/rb2TWXL/bgbtn.png');
+	        border: 2px solid #000;
+            transition: background-color 0.3s;
+        }
+            
+        .settingsOption:hover {
+        text-shadow: 2px 2px #202013CC;
+		color: #FFFFA0;
+        border: 2px solid #ffffff;
+        
+        }
+
+
+        #centerButtons {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 20vh;
+        gap: 20px;
+        text-align: center;
+        }
+    </style>
+</head>
+<body style="background-image: url('images/bdcfd870-6b19-43eb-91f0-0265ddb952b8.jpg')">
+    <div id="fade-overlay"></div>
+    <audio id="clickSound">
+        <source src="audio/tapRB.MP3" type="audio/mpeg">
+    </audio>
+    <div id = mainMenu style="display:block">
+
+    <header>
+        <h1>Mission: Passed</h1>
+     </header>
+    <img src="images/maze1sol.png" class="img-resize"/>
+    <style>
+        .img-resize {
+            transform: scale(1.5);
+            margin: 50px;
+        }
+    </style>
+    <p>Well done! You obtained the 2nd relic.</p>
+    <p>You are on step closer to saving your friends.</p>
+    <div id="centerButtons">
+    <button style="width: 30%;" type="button" onclick="playSoundAndRedirect('relic3.html')">Next</button>
+    </div>
+    <div id="settingsBtn" class="settingsButton"> Settings</div>   
+
+    <div id="inventory">
+        Inventory:
+        <div id="inventory-items"></div>
+    </div>
+    </div>
+    <div class="menuContainer" id="settingsScreen" style = "width: 45vw;  height: 45vw;">
+        <h1 class="title" style="margin-bottom: 8vw;" >SETTINGS</h1 >
+    <div class="settingsOption">
+        <span>Music</span>
+        <label class="toggleSwitch">
+            <input type="checkbox" id="musicToggle">
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="settingsOption" id="resumeBtn">
+        <span>Resume Game</span>
+    </div>
+
+    <div class="settingsOption" id="backToMainMenu">
+        <span>Back To Main Menu<span>  
+    </div>
+
+</div>
+</div>
+    <script>
+        function addToInventory(itemSrc){
+            let inventory = document.getElementById("inventory-items");
+
+            let item = document.createElement("img");
+            item.src = itemSrc;
+            item.alt = "Inventory Item";
+            item.style.width = "50px";
+            item.style.height = "50px";
+            item.style.border = "2px solid white";
+            item.style.borderRadius = "5px";
+
+            inventory.appendChild(item);
+        }
+        addToInventory('images/inscription.jpg')
+        addToInventory('images/fullSword.jpg')
+        addToInventory('images/relic1img.png')
+        addToInventory('images/relic2.png')
+
+        //This gets the userId from the local storage
+        let userId = localStorage.getItem("userId");
+
+        //This is to obtain the userInvId and store it in the userInvId variable below.
+        async function fetchuserInvId(userId){
+
+        let hostname = "localhost";
+        let username = "ralex01";
+        let password = "PVbhXXLBnWZY23x8";
+            let database = "CSC1034_CW_47";
+            let query = `SELECT userInvId FROM user_inventoryTable WHERE userId = ${userId}  LIMIT 1`;
+            let params = new URLSearchParams();
+                params.append('hostname', hostname);
+                params.append('username', username);
+                params.append('password', password);
+                params.append('database', database);
+                params.append('query', query);
+
+                let url = 'https://ralex01.webhosting1.eeecs.qub.ac.uk/dbConnector.php';
+                try {
+                    let response = await fetch(url, {
+                        method: 'POST',
+                        headers: {"Content-Type":"application/x-www-form-urlencoded"},
+                        body: params
+                    }); // Waits for a response from the fetch
+
+                    if(!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+
+                    let result = await response.json(); // Waits for the JSON to be parsed
+
+                    if(result.data && result.data.length > 0){
+                        userInvId = result.data[0].userInvId;
+                        console.log("Fetched userInvId ID: ", userInvId);
+                        return userInvId;
+                    }else{
+                        console.log("No userInvId found for the given user.")
+                    }
+                }catch (error){
+                    console.error("Error fetching userInvId: ", error);
+                }
+        }
+        async function insertIntoInventory(userId, itemId) {
+            let userInvId = await fetchuserInvId(userId);
+            if(!userInvId){
+                console.error("Cannot insert item.");
+                return;
+            }
+            
+            console.log("new ID", userInvId)  
+            //userInvId is correctly stored in userInvId
+            
+            //This part executes the INSERT query. It will insert the item into the database
+            let hostname = "localhost";
+            let username = "ralex01";
+            let password = "PVbhXXLBnWZY23x8";
+            let database = "CSC1034_CW_47";
+            let query = `INSERT INTO inventoryTable (itemId, userInvId) VALUES ( 2, ${userInvId})`;
+
+            let params = new URLSearchParams();
+                params.append('hostname', hostname);
+                params.append('username', username);
+                params.append('password', password);
+                params.append('database', database);
+                params.append('query', query);
+
+                console.log(params.toString());
+
+                executeDatabaseQuery(params);
+            
+            async function executeDatabaseQuery(params) {
+                let url = 'https://ralex01.webhosting1.eeecs.qub.ac.uk/dbConnector.php';
+                try {
+                    let response = await fetch(url, {
+                        method: 'POST',
+                        headers: {"Content-Type":"application/x-www-form-urlencoded"},
+                        body: params
+                    }); //Waits for a response from the fetch
+
+                    if(!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+
+                    let result = await response.json(); //Waits for the JSON to be parsed
+
+                    //If an error has been returned, e.g. incorrect SQL syntax, display the error
+                    if (result.error) {
+                        console.log(result.error.toString());
+                    }
+                    //If a dataset has been returned, e.g. from a SELECT statement, do something.
+                    else{
+                        console.log("Successful");
+                        if(result.affected_rows !== undefined){
+                            console.log(`Affected Rows: ${result.affected_rows}`);
+                        }
+                    }
+                
+                    
+                } catch (error) {
+                    console.error('Error parsing JSON:', error);
+                }
+            }
+        }
+        //Invoking function
+        insertIntoInventory(userId,2);//Make sure the itemId is the correct one corresponding to the ItemId table in the database
+
+        function playSoundAndRedirect(url) {
+            const clickSound = document.getElementById("clickSound");
+            clickSound.currentTime = 0; //Restart sound if already playing
+            clickSound.play();
+            //Delay redirect to allow sound to play
+            setTimeout(() => {
+                window.location.href = url;
+            }, 170);
+        }
+
+        let dbConfig = new URLSearchParams({
+        hostname: 'localhost',
+        username: 'sdas06',
+        password: '6g5X6MLgPjfWMSBS',
+        database: 'CSC1034_CW_47',
+        query: ''
+        });
+
+        //this var will be use to store the default screens id before the settings screen pops up 
+        //you willl have to change mainMenu according to what the id of the main block
+        const mainMenu = document.getElementById('mainMenu');
+        const settingsScreen = document.getElementById('settingsScreen');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const settingsBtn = document.getElementById('settingsBtn');
+
+        // to show settings
+        function showSettings() {
+            mainMenu.style.display = 'none';
+            settingsScreen.style.display = 'block';
+        }
+        
+        function resumeGame() {
+            mainMenu.style.display = 'block';
+            settingsScreen.style.display = 'none';
+        }
+
+        settingsBtn.addEventListener('click', showSettings);
+
+
+        //settings page functionality
+        
+        const resumeBtn = document.getElementById('resumeBtn');
+        const backtoMainMenu = document.getElementById('backToMainMenu');
+        
+       
+       async function toMainMenu(){
+
+            const currentUrl = window.location.href;
+            
+            console.log("Before navigation - UserID:", sessionStorage.getItem("userId"));
+            console.log("Before navigation - GameUserID:", sessionStorage.getItem("gameuserID"));
+            // Save the current URL to the lastLevel column in gameTable
+            console.log("Current URL:", currentUrl);
+             await saveLastLevel(currentUrl);
+    
+            // Then redirect to the main menu
+            window.location.href = 'StartPageTest.html';
+        }
+
+    
+        resumeBtn.addEventListener('click', resumeGame);
+        backtoMainMenu.addEventListener('click',toMainMenu);
+
+        window.addEventListener('load', function() {
+        backgroundMusic.play().catch(error => {
+        console.log('Auto-play was prevented. User interaction needed to start audio.');
+        // Many browsers require user interaction before playing audio
+            });
+        });
+
+        // Music toggle functionality
+        const musicToggle = document.getElementById('musicToggle');
+        musicToggle.checked = true; // Set checked by default
+
+        musicToggle.addEventListener('change', function() {
+        if (this.checked) {
+        backgroundMusic.play();
+         } 
+
+        else {
+        backgroundMusic.pause();
+        }
+    });
+
+// Additional function to ensure music can start after user interaction
+        document.addEventListener('click', function() {
+        if (musicToggle.checked && backgroundMusic.paused) {
+        backgroundMusic.play();
+        }
+        }, {once: true});
+
+
+        
+async function toMainMenu() {
+    // Get the current page URL
+
+    const currentUrl = window.location.href;
+
+    console.log(currentUrl);
+    // Save the current URL to the lastLevel column in gameTable
+    await saveLastLevel(currentUrl);
+    
+    // Then redirect to the main menu
+    window.location.href = 'StartPageTest.html';
+}
+////////////////////////////////////////////////////////////////////////////
+
+    async function saveLastLevel(pageUrl) {
+    // Get the current gameID from session storage
+
+    const gameId = localStorage.getItem("gameID");
+    console.log(gameId);
+    
+    if (!gameId) {
+        console.error("Cannot save last level: No active game");
+        return;
+    }
+    
+    // Create query to update the lastLevel in gameTable
+        const query = `UPDATE gameTable SET lastLevel = '${pageUrl}' WHERE gameID = ${gameId}`;
+        dbConfig.set('query', query);
+    
+        try {
+        const response = await fetch('https://sdas06.webhosting1.eeecs.qub.ac.uk/dbConnector.php', {
+            method: "POST",
+            body: dbConfig
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            console.log("Last level saved successfully:", pageUrl);
+
+        } else {
+            console.error("Failed to save last level:", result.message);
+        }
+        } catch (error) {
+        console.error("Error saving last level:", error);
+        }
+    }
+    </script>
+</body>
+</html>
