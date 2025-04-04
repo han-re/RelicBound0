@@ -48,18 +48,12 @@
     <button style="width: 60%;" type="button" onclick="makeChoice('path2')">Option 2: Dismantle the AI using telekinesis</button>
     <button style="width: 65%;" type="button" onclick="makeChoice('path3')">Option 3: Destroy the AI using super strength</button>
     <script>
-        // document.addEventListener("DOMContentLoaded", function() {
-        //     let chosenPower = localStorage.getItem("chosenPower");
-
-            // if (!chosenPower) {
-            //     alert("Superpower selection missing. Restart the game.");
-            //     return;
-            // }
+      
 
             let chosenPower = null;
-            let userId = sessionStorage.getItem("userId") || null;
+            let userId = 93 || null;
              if(!userId){
-                console.error("User ID not found in sessionStorage.");
+                console.error("User ID not found in localStorage.");
             }
 
             async function setChosenPower(userId) {
@@ -83,7 +77,7 @@
 
                 if ((chosenPower === "Invisibility" && path === "path1") ||
                     (chosenPower === "Telekinesis" && path === "path2") ||
-                    (chosenPower === "Strength" && path === "path3")) {
+                    (chosenPower === "Super Strength" && path === "path3")) {
                     window.location.href = "relic3Success.html";
                 } else {
                     window.location.href = "relic3Fail.html";
@@ -91,11 +85,11 @@
             }
 
             document.addEventListener("DOMContentLoaded", async () => {
-                let userId = sessionStorage.getItem("userId");
+                let userId = localStorage.getItem("userId");
                 if(userId){
                     await setChosenPower(userId);
                 }else{
-                    console.error("No userId found in session storage");
+                    console.error("No userId found in local storage");
                 }
             });
             window.makeChoice = makeChoice;
