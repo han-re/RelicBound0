@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relic 4 - Guardian Fight</title>
+    <link rel="stylesheet" href="3relic4.css">
+    <style>
+         .menuContainer {
+            height: 100%;
+            width: calc(var(--btn-size) * 10);
+            background: rgb(0, 0, 0,0);
+            border: 4px solid #8b000000;
+            padding: 20px;
+            text-align: center;
+            color: white;
+            display: block;
+        }
+            .settingsButton {
+            width: 7.5vw;   
+            height: 3vw; 
+            text-align: center;
+            padding: 0.2vw;
+            background-image: url('https://i.ibb.co/rb2TWXL/bgbtn.png');
+	        border: 2px solid #000;
+            cursor: pointer;
+            font-size: 1em;
+            color: #ffffff;
+            transition: background-color 0.3s; 
+            position: fixed; 
+            bottom: 2vw;
+            right: 2vw;
+            z-index: 1000;
+        }
+
+        .settingsButton:hover {
+            text-shadow: 2px 2px #202013CC;
+            color: #FFFFA0;
+            border: 2px solid #ffffff;
+            
+            }
+
+            #settingsScreen {
+            display: none;
+        }
+       
+    
+            #settingsScreen {
+            display: none;
+        }
+
+        .settingsOption {
+            width: flex;
+            display: flex;
+            font-size: 1.5em;
+            color: #ffffff;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-image: url('https://i.ibb.co/rb2TWXL/bgbtn.png');
+	        border: 2px solid #000;
+            transition: background-color 0.3s;
+        }
+            
+        .settingsOption:hover {
+        text-shadow: 2px 2px #202013CC;
+		color: #FFFFA0;
+        border: 2px solid #ffffff;
+        
+        }
+    </style>
+</head>
+<body>
+    <div id = mainMenu style="display:block">
+
+    <main class="main">
+        <section class="imageSection">
+            <img src="project_images/guardian.jpeg" alt="Guardian Warrior">
+        </section>
+
+        
+        <section class="choiceSection">
+
+            <div class="choiceOption" onclick="checkPower('Persuasion')">
+                <img src="project_images/persuasion.jpeg" alt="Power of Persuasion - Ability to make anyone do anything">
+                <div class="powerName">PERSUASION</div>
+                <div class="description">You take a step forward, hands raised in peace.</div>
+            </div>
+
+            <div class="choiceOption" onclick="checkPower('Invisibility')">
+                <img src="project_images/invisibility.jpeg" alt="Power of Invisibility - Become invisible at will">
+                <div class="powerName">INVISIBILITY</div>
+                <div class="description">You vanish into thin air, moving silently through the ruins.</div>
+            </div>
+
+            <div class="choiceOption" onclick="checkPower('Telekinesis')">
+                <img src="project_images/telekinesis.jpeg" alt="Power of Telekinesis - Read minds and move objects">
+                <div class="powerName">TELEKINESIS</div>
+                <div class="description">You focus your mind, reaching out to the warrior's blade with invisible force.</div>
+            </div>
+
+            <div class="choiceOption" onclick="checkPower('Super Strength')">
+                <img src="project_images/superstrength.jpeg" alt="Power of Super Strength - Strength">
+                <div class="powerName">SUPERSTRENGTH</div>
+                <div class="description">You grip your fists, feeling the power course through you. (pause)</div>
+            </div>
+            <div id="settingsBtn" class="settingsButton" style="font-size: large;"> Settings</div>   
+
+
+        
+        </section>
+    </main>
+    </div>
+    <div class="menuContainer" id="settingsScreen" style = "width: 45vw;  height: 45vw;">
+        <h1 class="title" style="margin-bottom: 8vw;" >SETTINGS</h1 >
+    <div class="settingsOption">
+        <span>Music</span>
+        <label class="toggleSwitch">
+            <input type="checkbox" id="musicToggle">
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="settingsOption" id="resumeBtn">
+        <span>Resume Game</span>
+    </div>
+
+    <div class="settingsOption" id="backToMainMenu">
+        <span>Back To Main Menu<span>  
+    </div>
+
+</div>
+</div>
+
+    <script>
+        function checkPower(choice) {
+            const userPower = localStorage.getItem('chosenPower');
+            console.log("Power clicked:", choice);
+            console.log("User's stored power:", userPower);
+            
+            switch(choice) {
+                case 'Persuasion':
+                    window.location.href = 'r4_f_pers.html';
+                    break;
+                case 'Telekinesis':
+                    if(userPower === 'Telekinesis') {
+                        window.location.href = 'r4_s_tele.html';
+                    } else {
+                        window.location.href = 'r4_f_tele.html';
+                    }
+                    break;
+                case 'Invisibility':
+                    if(userPower === 'Invisibility') {
+                        window.location.href = 'r4_s_invis.html';
+                    } else {
+                        window.location.href = 'r4_f_invis.html';
+                    }
+                    break;
+                case 'Super Strength':
+                    if(userPower === 'Super Strength') {
+                        window.location.href = 'r4_s_ss.html';
+                    } else {
+                        window.location.href = 'r4_f_ss.html';
+                    }
+                    break;
+            }
+        }
+
+        let dbConfig = new URLSearchParams({
+        hostname: 'localhost',
+        username: 'sdas06',
+        password: '6g5X6MLgPjfWMSBS',
+        database: 'CSC1034_CW_47',
+        query: ''
+        });
+
+        //this var will be use to store the default screens id before the settings screen pops up 
+        //you willl have to change mainMenu according to what the id of the main block
+        const mainMenu = document.getElementById('mainMenu');
+        const settingsScreen = document.getElementById('settingsScreen');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const settingsBtn = document.getElementById('settingsBtn');
+
+        // to show settings
+        function showSettings() {
+            mainMenu.style.display = 'none';
+            settingsScreen.style.display = 'block';
+        }
+        
+        function resumeGame() {
+            mainMenu.style.display = 'block';
+            settingsScreen.style.display = 'none';
+        }
+
+        settingsBtn.addEventListener('click', showSettings);
+
+
+        //settings page functionality
+        
+        const resumeBtn = document.getElementById('resumeBtn');
+        const backtoMainMenu = document.getElementById('backToMainMenu');
+        
+       
+       async function toMainMenu(){
+
+            const currentUrl = window.location.href;
+            
+            console.log("Before navigation - UserID:", sessionStorage.getItem("userId"));
+            console.log("Before navigation - GameUserID:", sessionStorage.getItem("gameuserID"));
+            // Save the current URL to the lastLevel column in gameTable
+            console.log("Current URL:", currentUrl);
+             await saveLastLevel(currentUrl);
+    
+            // Then redirect to the main menu
+            window.location.href = 'StartPageTest.html';
+        }
+
+    
+        resumeBtn.addEventListener('click', resumeGame);
+        backtoMainMenu.addEventListener('click',toMainMenu);
+
+        window.addEventListener('load', function() {
+        backgroundMusic.play().catch(error => {
+        console.log('Auto-play was prevented. User interaction needed to start audio.');
+        // Many browsers require user interaction before playing audio
+            });
+        });
+
+        // Music toggle functionality
+        const musicToggle = document.getElementById('musicToggle');
+        musicToggle.checked = true; // Set checked by default
+
+        musicToggle.addEventListener('change', function() {
+        if (this.checked) {
+        backgroundMusic.play();
+         } 
+
+        else {
+        backgroundMusic.pause();
+        }
+    });
+
+// Additional function to ensure music can start after user interaction
+        document.addEventListener('click', function() {
+        if (musicToggle.checked && backgroundMusic.paused) {
+        backgroundMusic.play();
+        }
+        }, {once: true});
+
+
+        
+async function toMainMenu() {
+    // Get the current page URL
+
+    const currentUrl = window.location.href;
+
+    console.log(currentUrl);
+    // Save the current URL to the lastLevel column in gameTable
+    await saveLastLevel(currentUrl);
+    
+    // Then redirect to the main menu
+    window.location.href = 'StartPageTest.html';
+}
+////////////////////////////////////////////////////////////////////////////
+
+    async function saveLastLevel(pageUrl) {
+    // Get the current gameID from session storage
+
+    const gameId = localStorage.getItem("gameID");
+    console.log(gameId);
+    
+    if (!gameId) {
+        console.error("Cannot save last level: No active game");
+        return;
+    }
+    
+    // Create query to update the lastLevel in gameTable
+        const query = `UPDATE gameTable SET lastLevel = '${pageUrl}' WHERE gameID = ${gameId}`;
+        dbConfig.set('query', query);
+    
+        try {
+        const response = await fetch('https://sdas06.webhosting1.eeecs.qub.ac.uk/dbConnector.php', {
+            method: "POST",
+            body: dbConfig
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            console.log("Last level saved successfully:", pageUrl);
+
+        } else {
+            console.error("Failed to save last level:", result.message);
+        }
+        } catch (error) {
+        console.error("Error saving last level:", error);
+        }
+    }
+    </script>
+</body>
+</html>
