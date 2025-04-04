@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Option 2</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- <script>
+        let randomNum = Math.floor(Math.random() * 100) + 1;
+        // console.log(randomNum);
+        function checkNumber() {
+            let enteredNum = document.getElementById("enteredNum").value;
+            enteredNum = parseInt(enteredNum);
+            if (enteredNum === randomNum) {
+                window.location.href = "option2Success.html";
+            }else {
+                window.location.href = "option2Fail.html";
+            }
+        }
+    </script> -->
+</head>
+<body style="background-image: url('images/background.jpg')">
+    <div id="fade-overlay"></div>
+    <audio id="clickSound">
+        <source src="audio/tapRB.MP3" type="audio/mpeg">
+    </audio>
+    <header>
+        <h1>Final Boss Fight</h1>
+     </header>
+    <img src="images/My-img8bit-com-Effect.gif" class="img-resize"/>
+    <style>
+        .img-resize {
+            transform: scale(1);
+            margin: 50px;
+        }
+    </style>
+    <p>"Bold move."</p>
+    <p>You have 1/100 chance of defeating the enemy by hitting his critical spot.</p>
+    <main>
+        <form class="answer-box">
+            <label>Enter a number 1-100:
+                <input type="number" id="enteredNum" name="enteredNum" min="1" max="100"required>
+            </label>
+            <button type="button" onclick="playSoundAndCheckNumber()">ATTACK</button>
+        </form>
+    </main>
+    <script>
+        function playSound() {
+            const clickSound = document.getElementById("clickSound");
+            clickSound.currentTime = 0; //Restart sound if already playing
+            clickSound.play();
+        }
+
+        let randomNum = Math.floor(Math.random() * 100) + 1;
+        console.log(randomNum);
+        function checkNumber() {
+            let enteredNum = document.getElementById("enteredNum").value;
+            enteredNum = parseInt(enteredNum);
+            if (enteredNum === randomNum) {
+                window.location.href = "option2Success.html";
+            }else {
+                window.location.href = "option2Fail.html";
+            }
+        }
+        function playSoundAndCheckNumber() {
+            const clickSound = document.getElementById("clickSound");
+            
+            // Restart the sound if it's already playing
+            clickSound.currentTime = 0;
+            clickSound.play();
+
+            // Delay the navigation to allow the sound to play
+            setTimeout(checkNumber, 200); // Wait 200ms before checking the number
+        }
+    </script>
+</body>
+</html>

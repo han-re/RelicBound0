@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Option 2 Fail</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body style="background-image: url('images/background.jpg')">
+    <div id="fade-overlay"></div>
+    <audio id="clickSound">
+        <source src="audio/tapRB.MP3" type="audio/mpeg">
+    </audio>
+    <header>
+        <h1>YOU LOSE!</h1>
+     </header>
+    <img src="images/My-img8bit-com-Effect.gif" class="img-resize"/>
+    <style>
+        .img-resize {
+            transform: scale(1);
+            margin: 50px;
+        }
+    </style>
+    <p>"You never stood a chance anyway..."</p>
+    <p>You entered the wrong number. Now you must restart the game.</p>
+    <button style="width: 50%;" type="button" onclick="playSoundAndRedirect('home.html')">Return to Homescreen</button>
+    <div id="inventory">
+        Inventory:
+    <div id="inventory-items"></div>
+    </div>
+    <script>
+        function addToInventory(itemSrc){
+            let inventory = document.getElementById("inventory-items");
+
+            let item = document.createElement("img");
+            item.src = itemSrc;
+            item.alt = "Inventory Item";
+            item.style.width = "50px";
+            item.style.height = "50px";
+            item.style.border = "2px solid white";
+            item.style.borderRadius = "5px";
+
+            inventory.appendChild(item);
+        }
+
+        function playSoundAndRedirect(url) {
+            const clickSound = document.getElementById("clickSound");
+            clickSound.currentTime = 0; //Restart sound if already playing
+            clickSound.play();
+            //Delay redirect to allow sound to play
+            setTimeout(() => {
+                window.location.href = url;
+            }, 170);
+        }
+    </script>
+</body>
+</html>
