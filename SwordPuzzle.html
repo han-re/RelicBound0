@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title></title>
+    <link rel="stylesheet" href="style6.css">
+</head>
+<body>
+
+    <div id="fade-overlay"></div>
+    
+    <h1 style=" color: #ffffff;">Assemble the Ancient Blade</h1>
+    
+
+    <div class="gameContainer">
+      <div class="instructions">
+        <p style ="color: #ffffff;">Select a sword piece and click on the matching slot to place it. Complete the sword to win!</p>
+      </div>
+      
+      <div class="puzzlePieces">
+        <div class="piece" data-piece="handle">
+          <img src="project_images/swordHandle.png" alt="Sword Handle" class="pieceImage"> 
+        </div>
+
+        <div class="piece" data-piece="hilt">
+          <img src="project_images/swordHilt.png" alt="Sword Hilt" class="pieceImage">
+        </div>
+
+        <div class="piece" data-piece="blade">
+          <img src="project_images/swordBlade.png" alt="Sword Blade" class="pieceImage">
+        </div>
+
+        <div class="piece" data-piece="pummel">
+          <img src="project_images/swordPummel.png" alt="Sword Pummel" class="pieceImage">
+        </div>
+
+      </div>
+      
+      <div class="swordOutline">
+        <div class="slotsContainer">
+          <div class="slot" data-slot="handle">
+            <div class="slotOutline">
+              
+            </div>
+          </div>
+          <div class="slot" data-slot="hilt">
+            <div class="slotOutline">
+             
+            </div>
+          </div>
+          <div class="slot" data-slot="pummel">
+            <div class="slotOutline">
+              
+            </div>
+          </div>
+          <div class="slot" data-slot="blade">
+            <div class="slotOutline">
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="notification">
+      <h2>Sword Assembled!</h2>
+      <p>You have successfully reconstructed the ancient blade.</p>
+      <button class="btn" onclick="window.location.href='obtainr1.html'"> Next</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+      const pieces = document.querySelectorAll('.piece');
+      const slots = document.querySelectorAll('.slot');
+      const notification = document.querySelector('.notification');
+      
+      let selectedPiece = null;
+      let filledSlots = 0;
+      
+      // Add event listeners to the pieces
+      pieces.forEach(piece => {
+        piece.addEventListener('click', function() {
+          if (selectedPiece) selectedPiece.classList.remove('selected');
+          
+          if (selectedPiece === this) {
+            selectedPiece = null;
+            return;
+          }
+          
+          selectedPiece = this;
+          this.classList.add('selected');
+          
+          slots.forEach(slot => slot.classList.remove('highlight'));
+          
+          if (selectedPiece) {
+            const pieceType = selectedPiece.dataset.piece;
+            const matchingSlot = document.querySelector(`.slot[data-slot="${pieceType}"]:not(.filled)`);
+            if (matchingSlot) matchingSlot.classList.add('highlight');
+          }
+        });
+      });
+      
+      // Add event listeners to the slots
+      slots.forEach(slot => {
+        slot.addEventListener('click', function() {
+          if (!selectedPiece || slot.classList.contains('filled')) return;
+          
+          const pieceType = selectedPiece.dataset.piece;
+          const slotType = slot.dataset.slot;
+          
+          if (pieceType === slotType) {
+            // Clone the piece image and put it in the slot
+            const pieceImage = selectedPiece.querySelector('.pieceImage').cloneNode(true);
+            slot.appendChild(pieceImage);
+            slot.classList.add('filled');
+            
+            selectedPiece.style.visibility = 'hidden';
+            selectedPiece.classList.remove('selected');
+            selectedPiece = null;
+            
+            slots.forEach(s => s.classList.remove('highlight'));
+            
+            filledSlots++;
+            if (filledSlots === slots.length) {
+              setTimeout(() => {
+                notification.style.display = 'block';
+              }, 500);
+            }
+          }
+        });
+      });
+    });
+    </script>
+    
+</body>
+</html>
