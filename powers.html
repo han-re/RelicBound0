@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Powers Selection</title>
+    <link rel="stylesheet" href="style1.css">
+</head>
+<body>
+    <div id="fade-overlay"></div>
+
+   <header class="startingText">
+    <h1>Choose Your Power</h1>
+    <h3 id="warning">Your choice will affect your journey. Choose wisely.</h3>
+    <br><br>
+   </header>
+
+    <section class="powerSection">
+        <div class="powerOption" onclick="selectPower('Invisibility')">
+            <img src="project_images/invisibility.jpeg" alt="Power of Invisibility - Become invisible at will">
+            <div class="powerName">INVISIBILITY</div>
+            <div class="description">Become completely invisible at will. Allowing for stealth, evasion, and surprise attacks. Players can move undetected, bypass obstacles, and avoid danger.</div>
+        </div>
+
+        <div class="powerOption" onclick="selectPower('Telekinesis')">
+            <img src="project_images/telekinesis.jpeg" alt="Power of Telekinesis - Read minds and move objects">
+            <div class="powerName">TELEKINESIS</div>
+            <div class="description">Read minds and move objects using only your thoughts. Grants players control over objects with their mind and the ability to read or influence thoughts.</div>
+        </div>
+
+        <div class="powerOption" onclick="selectPower('Super Strength')">
+            <img src="project_images/superstrength.jpeg" alt="Power of Superstrength - Lift and break objects">
+            <div class="powerName">SUPERSTRENGTH</div>
+            <div class="description">Supernatural strength. Allows players to lift heavy objects, break barriers, and overpower opponents with ease.</div>
+        </div>
+    </section>
+
+    <script>
+        // Function to save selected power to the database
+        async function savePowerToDatabase(power) {
+            // Database connection details
+            const dbConfig = {
+                hostname: "localhost",
+                username: "rananth01",
+                password: "sr2gW4z34rW7GbrL",
+                database: "CSC1034_CW_47"
+            };
+    
+            // SQL query to update the power for the current user in the game
+            const query = `UPDATE gameTable SET power = '${power}' WHERE gameID = ${gameID} AND gameuserID = ${currentGameUserID}`;
+    
+            // Prepare data for the request
+            let params = new URLSearchParams();
+            params.append('hostname', dbConfig.hostname);
+            params.append('username', dbConfig.username);
+            params.append('password', dbConfig.password);
+            params.append('database', dbConfig.database);
+            params.append('query', query);
+    
+            // API endpoint 
+            const url = 'https://rananth01.webhosting1.eeecs.qub.ac.uk/dbConnector.php';
+    
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: params
+                });
+    
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+    
+                const result = await response.json();
+    
+                if (result.error) {
+                    console.error("Database error:", result.error);
+                    return false;
+                }
+    
+                console.log("Power saved successfully!");
+                return true;
+    
+            } catch (error) {
+                console.error("Error saving power to database:", error);
+                return false;
+            }
+        }
+    
+        // Function to select a power and handle navigation
+        async function selectPower(power) {
+            try {
+                // Store the chosen power in localStorage
+                localStorage.setItem('chosenPower', power);
+                console.log(`Power stored in localStorage: ${power}`);
+    
+                // Attempt to save the power to the database
+                const isSaved = await savePowerToDatabase(power);
+                if (!isSaved) {
+                    console.warn("Warning: Power could not be saved to the database.");
+                }
+    
+                // Navigate to the next page
+                window.location.href = 'context2.html';
+    
+            } catch (error) {
+                console.error("Error in selectPower function:", error);
+            }
+        }
+    
+
+    </script>
+    
+
+
+
+</body>
+</html>
