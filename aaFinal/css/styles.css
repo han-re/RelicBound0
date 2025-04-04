@@ -67,11 +67,18 @@ body {
 main {
     display: flex;
 }
-
+:root {
+    --primary-color: #1e1e22;
+    --secondary-color: #ddd;
+    --accent-color: #5d43b5;
+    --border-color: #000;
+    --hover-color: #FFFFA0;
+}
 button {
     display: block;
     width: 100%;
     margin: 15px 0;
+    background-color: var(--primary-color);
     background-image: url('https://i.ibb.co/rb2TWXL/bgbtn.png');
     padding: 0.5em;
     font-size: 1.2em;
