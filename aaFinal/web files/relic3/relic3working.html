@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relic 3</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+         .menuContainer {
+            height: 100%;
+            width: calc(var(--btn-size) * 10);
+            background: rgb(0, 0, 0,0);
+            border: 4px solid #8b000000;
+            padding: 20px;
+            text-align: center;
+            color: white;
+            display: block;
+        }
+            .settingsButton {
+            width: 7.5vw;   
+            height: 3vw; 
+            text-align: center;
+            padding: 0.2vw;
+            background-image: url('https://i.ibb.co/rb2TWXL/bgbtn.png');
+	        border: 2px solid #000;
+            cursor: pointer;
+            font-size: 1em;
+            color: #ffffff;
+            transition: background-color 0.3s; 
+            position: fixed; 
+            bottom: 2vw;
+            right: 2vw;
+            z-index: 1000;
+        }
+
+        .settingsButton:hover {
+            text-shadow: 2px 2px #202013CC;
+            color: #FFFFA0;
+            border: 2px solid #ffffff;
+            
+            }
+
+            #settingsScreen {
+            display: none;
+        }
+       
+    
+            #settingsScreen {
+            display: none;
+        }
+
+        .settingsOption {
+            width: flex;
+            display: flex;
+            font-size: 1.5em;
+            color: #ffffff;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-image: url('https://i.ibb.co/rb2TWXL/bgbtn.png');
+	        border: 2px solid #000;
+            transition: background-color 0.3s;
+        }
+            
+        .settingsOption:hover {
+        text-shadow: 2px 2px #202013CC;
+		color: #FFFFA0;
+        border: 2px solid #ffffff;
+        
+        }
+
+        #centerButtons {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 30vh;
+        gap: 20px;
+        text-align: center;
+        }
+    </style>
+</head>
+<body style="background-image: url('images/spaceship.jpg')">
+    <div id="gifOverlay">
+        <img src="images/black-hole-11202.gif" alt="Loading Animation">
+    </div>
+    <audio id="clickSound">
+        <source src="audio/tapRB.MP3" type="audio/mpeg">
+    </audio>
+    <div id = mainMenu style="display:block">
+
+    <header>
+        <h1>Mission: Find the 3rd Relic</h1>
+     </header>
+    <img src="images/evilRobot.jpg" class="img-resize"/>
+    <style>
+        .img-resize {
+            transform: scale(1.5);
+            margin: 50px;
+        }
+    </style>
+    <p>"Initiating AI Defence System..."</p>
+    <p>You have just landed in an alien spaceship.</p>
+    <p>The 3rd relic is contained inside its rogue AI defence system.</p>
+    <p>To acquire it, you must first get past the robot by picking the correct method based on your power. Choose carefully...</p>
+    <div id="centerButtons">
+    <button style="width: 60%;" type="button" onclick="makeChoice('path1')" onclick="playSoundAndRedirect()">Option 1: Sneak past the AI using invisibility</button>
+    <button style="width: 60%;" type="button" onclick="makeChoice('path2')" onclick="playSoundAndRedirect()">Option 2: Dismantle the AI using telekinesis</button>
+    <button style="width: 65%;" type="button" onclick="makeChoice('path3')" onclick="playSoundAndRedirect()">Option 3: Destroy the AI using super strength</button>
+    <div id="settingsBtn" class="settingsButton"> Settings</div>   
+    </div>
+    </div>
+
+    <div class="menuContainer" id="settingsScreen" style = "width: 45vw;  height: 45vw;">
+        <h1 class="title" style="margin-bottom: 8vw;" >SETTINGS</h1 >
+    <div class="settingsOption">
+        <span>Music</span>
+        <label class="toggleSwitch">
+            <input type="checkbox" id="musicToggle">
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="settingsOption" id="resumeBtn">
+        <span>Resume Game</span>
+    </div>
+
+    <div class="settingsOption" id="backToMainMenu">
+        <span>Back To Main Menu<span>  
+    </div>
+
+</div>
+</div>
+    <script>
+        let chosenPower = null;
+            let userId = localStorage.getItem("userId") || null;
+             if(!userId){
+                console.error("User ID not found in localStorage.");
+            }
+            async function setChosenPower(userId) {
+                chosenPower = await fetchLatestPower(userId);
+                console.log("Chosen power set to: ", chosenPower);
+                
+            }
+            async function makeChoice(path) {
+                if(!chosenPower){
+                    console.log("Fetching chosen power...");
+                    await setChosenPower(userId);
+                }
+                console.log("Current power:", chosenPower);
+                if(!chosenPower){
+                    alert("Error: Power not found")
+                    return;
+                }
+                if ((chosenPower === "Invisibility" && path === "path1") ||
+                    (chosenPower === "Telekinesis" && path === "path2") ||
+                    (chosenPower === "Strength" && path === "path3")) {
+                    window.location.href = "relic3Success.html";
+                } else {
+                    window.location.href = "relic3Fail.html";
+                }
+            }
+            document.addEventListener("DOMContentLoaded", async () => {
+                let userId = localStorage.getItem("userId");
+                if(userId){
+                    await setChosenPower(userId);
+                }else{
+                    console.error("No userId found in local storage");
+                }
+            });
+            window.makeChoice = makeChoice;
+    
+        async function fetchgameUserId(userId){
+            let hostname = "localhost";
+            let username = "cocarroll06";
+            let password = "ymg9g0sCgqxDf58f";
+            let database = "CSC1034_CW_47";
+            let query = `SELECT gameuserID FROM game_userTable WHERE userId = ${userId};`
+
+            let params = new URLSearchParams();
+                params.append('hostname', hostname);
+                params.append('username', username);
+                params.append('password', password);
+                params.append('database', database);
+                params.append('query', query);
+
+            let url = 'https://cocarroll06.webhosting1.eeecs.qub.ac.uk/dbConnector.php';
+            try {
+                let response = await fetch(url, {
+                    method: 'POST',
+                    headers: {"Content-Type":"application/x-www-form-urlencoded"},
+                    body: params
+                }); //Waits for a response from the fetch
+
+                if(!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                let result = await response.json(); //Waits for the JSON to be parsed
+
+                if(result.data && result.data.length > 0){
+                    let gameuserID = result.data[0].gameuserID;
+                    console.log("Fetched gameuserId: ", gameuserID);
+                    return gameuserID;
+                }else{
+                    console.log("No gameUserID found for the given user.");
+                    return null;
+                }
+            }catch (error){
+                console.error("Error fetching gameUserId: ", error);
+                return null;
+            }
+        }
+        async function fetchLatestGameID(userId){
+            let gameUserID = await fetchgameUserId(userId);
+            if(!gameUserID){
+                console.error("No gameUserId: ", gameUserID);
+            }
+            console.log("New gamUserID: ", gameUserID);
+
+            let hostname = "localhost";
+            let username = "cocarroll06";
+            let password = "ymg9g0sCgqxDf58f";
+            let database = "CSC1034_CW_47";
+            let query = `SELECT gameID FROM gameTable WHERE gameuserId = ${gameUserID} ORDER BY gameID DESC LIMIT 1;`
+
+            console.log(`Executing query: ${query}`);
+
+            let params = new URLSearchParams();
+                params.append('hostname', hostname);
+                params.append('username', username);
+                params.append('password', password);
+                params.append('database', database);
+                params.append('query', query);
+
+                let url = 'https://cocarroll06.webhosting1.eeecs.qub.ac.uk/dbConnector.php';
+                try {
+                    let response = await fetch(url, {
+                        method: 'POST',
+                        headers: {"Content-Type":"application/x-www-form-urlencoded"},
+                        body: params
+                    }); //Waits for a response from the fetch
+
+                    if(!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+                    let result = await response.json(); //Waits for the JSON to be parsed
+
+                    if(result.data && result.data.length > 0){
+                        let latestGameID = result.data[0].gameID;
+                        console.log("Fetched gameid: ", latestGameID);
+                        return latestGameID;
+                    }else{
+                        console.log("No gameID found for the given gameuserID.");
+                        return null;
+                    }
+                }catch (error){
+                    console.error("Error fetching gameId: ", error);
+                    return null;
+                }
+        }
+
+        async function fetchPowerFromGameID(gameID) {
+            if(!gameID){
+                console.error("Error fetching latest gameID:");
+                return null;
+            }
+            
+            let hostname = "localhost";
+            let username = "cocarroll06";
+            let password = "ymg9g0sCgqxDf58f";
+            let database = "CSC1034_CW_47";
+            let query = `SELECT power FROM gameTable WHERE gameID = ${gameID};`
+
+            let params = new URLSearchParams();
+                params.append('hostname', hostname);
+                params.append('username', username);
+                params.append('password', password);
+                params.append('database', database);
+                params.append('query', query);
+
+                let url = 'https://cocarroll06.webhosting1.eeecs.qub.ac.uk/dbConnector.php';
+                try {
+                    let response = await fetch(url, {
+                        method: 'POST',
+                        headers: {"Content-Type":"application/x-www-form-urlencoded"},
+                        body: params
+                    }); //Waits for a response from the fetch
+
+                    if(!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+                    let result = await response.json(); //Waits for the JSON to be parsed
+
+                    if(result.data && result.data.length > 0){
+                        let power = result.data[0].power;
+                            console.log("Fetched power: ", power);
+                            return power;
+                    }else{
+                        console.log("No power found for the given gameuserID.");
+                        return null;
+                    }
+                    }catch (error){
+                        console.error("Error fetching power: ", error);
+                        return null;
+                    }
+        }
+
+        async function fetchLatestPower(userId){
+            let latestGameID = await fetchLatestGameID(userId);
+            if(!latestGameID){
+                console.error("No gameID found");
+                return null;
+            }
+            return await fetchPowerFromGameID(latestGameID);
+        }
+
+        fetchgameUserId(userId);
+        fetchLatestGameID(userId);
+        fetchLatestPower(userId);
+
+        function playSoundAndRedirect(url) {
+            const clickSound = document.getElementById("clickSound");
+            clickSound.currentTime = 0; //Restart sound if already playing
+            clickSound.play();
+            //Delay redirect to allow sound to play
+            setTimeout(() => {
+                window.location.href = url;
+            }, 170);
+        }
+
+        let dbConfig = new URLSearchParams({
+        hostname: 'localhost',
+        username: 'sdas06',
+        password: '6g5X6MLgPjfWMSBS',
+        database: 'CSC1034_CW_47',
+        query: ''
+        });
+
+        //this var will be use to store the default screens id before the settings screen pops up 
+        //you willl have to change mainMenu according to what the id of the main block
+        const mainMenu = document.getElementById('mainMenu');
+        const settingsScreen = document.getElementById('settingsScreen');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const settingsBtn = document.getElementById('settingsBtn');
+
+        // to show settings
+        function showSettings() {
+            mainMenu.style.display = 'none';
+            settingsScreen.style.display = 'block';
+        }
+        
+        function resumeGame() {
+            mainMenu.style.display = 'block';
+            settingsScreen.style.display = 'none';
+        }
+
+        settingsBtn.addEventListener('click', showSettings);
+
+
+        //settings page functionality
+        
+        const resumeBtn = document.getElementById('resumeBtn');
+        const backtoMainMenu = document.getElementById('backToMainMenu');
+        
+       
+       async function toMainMenu(){
+
+            const currentUrl = window.location.href;
+            
+            console.log("Before navigation - UserID:", sessionStorage.getItem("userId"));
+            console.log("Before navigation - GameUserID:", sessionStorage.getItem("gameuserID"));
+            // Save the current URL to the lastLevel column in gameTable
+            console.log("Current URL:", currentUrl);
+             await saveLastLevel(currentUrl);
+    
+            // Then redirect to the main menu
+            window.location.href = 'StartPageTest.html';
+        }
+
+    
+        resumeBtn.addEventListener('click', resumeGame);
+        backtoMainMenu.addEventListener('click',toMainMenu);
+
+        window.addEventListener('load', function() {
+        backgroundMusic.play().catch(error => {
+        console.log('Auto-play was prevented. User interaction needed to start audio.');
+        // Many browsers require user interaction before playing audio
+            });
+        });
+
+        // Music toggle functionality
+        const musicToggle = document.getElementById('musicToggle');
+        musicToggle.checked = true; // Set checked by default
+
+        musicToggle.addEventListener('change', function() {
+        if (this.checked) {
+        backgroundMusic.play();
+         } 
+
+        else {
+        backgroundMusic.pause();
+        }
+    });
+
+// Additional function to ensure music can start after user interaction
+        document.addEventListener('click', function() {
+        if (musicToggle.checked && backgroundMusic.paused) {
+        backgroundMusic.play();
+        }
+        }, {once: true});
+
+
+        
+async function toMainMenu() {
+    // Get the current page URL
+
+    const currentUrl = window.location.href;
+
+    console.log(currentUrl);
+    // Save the current URL to the lastLevel column in gameTable
+    await saveLastLevel(currentUrl);
+    
+    // Then redirect to the main menu
+    window.location.href = 'StartPageTest.html';
+}
+////////////////////////////////////////////////////////////////////////////
+
+    async function saveLastLevel(pageUrl) {
+    // Get the current gameID from session storage
+
+    const gameId = localStorage.getItem("gameID");
+    console.log(gameId);
+    
+    if (!gameId) {
+        console.error("Cannot save last level: No active game");
+        return;
+    }
+    
+    // Create query to update the lastLevel in gameTable
+        const query = `UPDATE gameTable SET lastLevel = '${pageUrl}' WHERE gameID = ${gameId}`;
+        dbConfig.set('query', query);
+    
+        try {
+        const response = await fetch('https://sdas06.webhosting1.eeecs.qub.ac.uk/dbConnector.php', {
+            method: "POST",
+            body: dbConfig
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            console.log("Last level saved successfully:", pageUrl);
+
+        } else {
+            console.error("Failed to save last level:", result.message);
+        }
+        } catch (error) {
+        console.error("Error saving last level:", error);
+        }
+    }
+    </script>
+</body>
+</html>
