@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="css/styles.css">
+
+        <title>RelicBound: Discard an Item</title>
+    </head>
+    <body style="background-image: url('images/cityscape-skyscraper-night-urban-skyline-architecture-dusk-outdoors-sunset-generated-by-artificial-intelligence.jpg')">
+        <div id="fade-overlay"></div>
+        <header>
+            <h1>Inventory Full! Discard an Item</h1>
+        </header>
+        <div id="inventory">
+            Inventory:
+            <div id="inventory-items"></div>
+        </div>
+        <p>Your inventory is full. Choose an item to discard.</p>
+        <button style="width: 50%;" type="button" onclick="deleteItem(5); removeFromInventory('images/fullSword.jpg')">Discard Item: The Sword Of Souls</button>
+        <button style="width: 50%;" type="button" onclick="removeFromInventory('images/fullShield.png'); deleteItem(6);">Discard Item: The Shield Of Saints</button>
+        <button style="width: 50%;" type="button" onclick="deleteItem(7); removeFromInventory('images/inscription.jpg')">Discard Item: Aztec Inscription</button>
+        <br>
+        <br>
+        <button style="width: 20%;" type="button" onclick="window.location.href='relic4.html'">Go to relic 4</button>
+
+    <script>
+
+function addToInventory(itemSrc){
+            let inventory = document.getElementById("inventory-items");
+
+            let item = document.createElement("img");
+            item.src = itemSrc;
+            item.alt = "Inventory Item";
+            item.style.width = "50px";
+            item.style.height = "50px";
+            item.style.border = "2px solid white";
+            item.style.borderRadius = "5px";
+
+            inventory.appendChild(item);
+        }
+        addToInventory('images/fullSword.jpg')
+        addToInventory('images/inscription.jpg')
+        addToInventory('images/relic1img.png')
+        addToInventory('images/relic2.png')
+        addToInventory('images/relic3.jpg')
+        addToInventory('images/fullShield.png')
+
+
+        function removeFromInventory(itemSrc){
+            let inventory = document.getElementById("inventory-items");
+            let items = inventory.getElementsByTagName("img");
+
+            for(let i = 0; i < items.length; i++){
+                if(items[i].src.endsWith(itemSrc)){
+                    inventory.removeChild(items[i]);
+                    return;
+                }
+            }
+        }
+
+
+
+
+
+
+
+
+        let userId = 3;
+
+        async function fetchuserInvId(userId){
+
+let hostname = "localhost";
+let username = "ralex01";
+let password = "PVbhXXLBnWZY23x8";
+let database = "CSC1034_CW_47";
+let query = `SELECT userInvId FROM user_inventoryTable WHERE userId = ${userId}  LIMIT 1`;
+
+let params = new URLSearchParams();
+    params.append('hostname', hostname);
+    params.append('username', username);
+    params.append('password', password);
+    params.append('database', database);
+    params.append('query', query);
+
+    let url = 'https://ralex01.webhosting1.eeecs.qub.ac.uk/dbConnector.php';
+    try {
+        let response = await fetch(url, {
+            method: 'POST',
+            headers: {"Content-Type":"application/x-www-form-urlencoded"},
+            body: params
+        }); // Waits for a response from the fetch
+
+        if(!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+
+        let result = await response.json(); // Waits for the JSON to be parsed
+
+        if(result.data && result.data.length > 0){
+            userInvId = result.data[0].userInvId;
+            console.log("Fetched userInvId ID: ", userInvId);
+            return userInvId;
+        }else{
+            console.log("No userInvId found for the given user.");
+            return null;
+        }
+    }catch (error){
+        console.error("Error fetching userInvId: ", error);
+        return null;
+    }
+
+
+}
+
+    async function deleteItem(itemId) {
+        let userId = 3
+        if(!userId){
+            console.error("Cannot delete item. User not logged in");
+            return;
+        }
+
+        let userInvId = await fetchuserInvId(userId);
+        if(!userInvId){
+            console.error("Cannot delete item. userInvId not found.")
+            return;
+        }
+
+
+
+        let hostname = "localhost";
+        let username = "ralex01";
+        let password = "PVbhXXLBnWZY23x8";
+        let database = "CSC1034_CW_47";
+        let query = `DELETE FROM inventoryTable WHERE itemId = ${itemId} AND userInvId = ${userInvId}`;
+
+        let params = new URLSearchParams();
+            params.append('hostname', hostname);
+            params.append('username', username);
+            params.append('password', password);
+            params.append('database', database);
+            params.append('query', query);
+
+            let url = 'https://ralex01.webhosting1.eeecs.qub.ac.uk/dbConnector.php';
+            try {
+                let response = await fetch(url, {
+                    method: 'POST',
+                    headers: {"Content-Type":"application/x-www-form-urlencoded"},
+                    body: params
+                }); // Waits for a response from the fetch
+
+                if(!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+                let result = await response.json(); // Waits for the JSON to be parsed
+
+                if(result.error){
+                    console.error(result.error.toString());
+                }else{
+                    console.log("Item succesfully deleted");
+                }
+            }catch(error){
+                console.error("Error deleting item:", error);
+            }
+            
+    }
+        
+    </script>
+
+    </body>
+</html>
