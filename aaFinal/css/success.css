@@ -20,7 +20,7 @@
 body {
     display: flex;
     flex-direction: column;
-    background: url('project_images/cityscape.jpg') no-repeat center center fixed;
+    background: url('images/background.jpg') no-repeat center center fixed;
     background-size: cover;
     background-position: center;
     background-repeat: repeat;
@@ -81,7 +81,7 @@ body {
     font-size: 1.2rem;
     white-space: pre-wrap;
     padding: 18px 30px;
-    background-image: url('./project_images/bgbtn.png');
+    background-image: url('images/bgbtn.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
